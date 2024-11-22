@@ -104,34 +104,33 @@ export default function ScannerPage() {
     }
   };
 
-  const handleScan = async (data) => {
-    
-    if (data !== undefined ){
-      try {
-        const Ticket = Parse.Object.extend('Ticket');
-        const query = new Parse.Query(Ticket);
-        query.equalTo('code', data);
-        const ticket = await query.first();
+  const handleScan = async (data) => {  
+    if (data !== undefined) {  
+      try {  
+        const Ticket = Parse.Object.extend('Ticket');  
+        const query = new Parse.Query(Ticket);  
+        query.equalTo('code', data);  
+        const ticket = await query.first();  
 
-        if (ticket) {
-          setTicketDetails({
-            code: ticket.get('code'),
-            status: ticket.get('status'),
-            class: ticket.get('class'),
-          });
-   
-        } else {
-          alert('Ticket not found');
-          setIsScanning(true);
-        }
-      } catch (error) {
-        console.error('Error scanning ticket:', error);
-        setIsScanning(true);
-      }
-    } else{
-      console.log("nothing")
-    }
-  };
+        if (ticket) {  
+          setTicketDetails({  
+            code: ticket.get('code'),  
+            status: ticket.get('status'),  
+            class: ticket.get('class') || 'Unknown', // Valeur par défaut  
+          });  
+        } else {  
+          alert('Ticket not found');  
+          setIsScanning(true);  
+        }  
+      } catch (error) {  
+        console.error('Error scanning ticket:', error);  
+        alert('Failed to scan ticket. Please try again.');  
+        setIsScanning(true);  
+      }  
+    } else {  
+      console.log("No data scanned.");  
+    }  
+};
 
   const getAvailableActions = () => {
     if (role === 'Manager') {
