@@ -1,37 +1,36 @@
-import { useState } from 'react';
-import Parse from '../lib/parse';
-import { useRouter } from 'next/router';
+import { useState } from "react";
+import Parse from "../lib/parse";
+import { useRouter } from "next/router";
 
 export default function CreateEvent() {
-  const [name, setName] = useState('');
-  const [date, setDate] = useState('');
-  const [location, setLocation] = useState('');
+  const [name, setName] = useState("");
+  const [date, setDate] = useState("");
+  const [location, setLocation] = useState("");
   const router = useRouter();
 
   const handleCreateEvent = async (e) => {
     e.preventDefault();
-    const Event = Parse.Object.extend('Event');
+    const Event = Parse.Object.extend("Event");
     const event = new Event();
 
-    event.set('name', name);
-    event.set('date', new Date(date));
-    event.set('location', location);
-    event.set('manager', Parse.User.current());
+    event.set("name", name);
+    event.set("date", new Date(date));
+    event.set("location", location);
+    event.set("manager", Parse.User.current());
 
     try {
       await event.save();
 
-
-      const RoleAssignment = Parse.Object.extend('RoleAssignment');
+      const RoleAssignment = Parse.Object.extend("RoleAssignment");
       const roleAssignment = new RoleAssignment();
-      roleAssignment.set('event', event);
-      roleAssignment.set('user', Parse.User.current());
-      roleAssignment.set('role', 'Manager');
+      roleAssignment.set("event", event);
+      roleAssignment.set("user", Parse.User.current());
+      roleAssignment.set("role", "Manager");
       await roleAssignment.save();
 
-      router.push('/dashboard');
+      router.push("/dashboard");
     } catch (error) {
-      alert('Error: ' + error.message);
+      alert("Error: " + error.message);
     }
   };
 
