@@ -1,8 +1,12 @@
+import { inter } from "./fonts";
 import type { Metadata } from "next";
 import "./globals.css";
 
 export const metadata: Metadata = {
-  title: "Evotickets",
+  title: {
+    template: "%s | evotickets",
+    default: "Accueil | evotickets",
+  },
   description: "",
 };
 
@@ -12,8 +16,12 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="fr">
-      <body className={` antialiased`}>{children}</body>
+    <html lang="fr" className={`${inter.variable} antialiased`}>
+      <body
+        className={`bg-background text-foreground font-inter`}
+      >
+        {children}
+      </body>
     </html>
   );
 }

@@ -9,8 +9,27 @@ export default {
   theme: {
     extend: {
       colors: {
-        background: "var(--background)",
         foreground: "var(--foreground)",
+        background: "var(--background)",
+        dark: "var(--dark)",
+        accent: "var(--accent)",
+        alternate: "var(--alternate)",
+      },
+
+      fontFamily: {
+        inter: ["var(--font-inter)"],
+      },
+
+      screens: {
+        mobile: "320px",
+        mobileM: "475px",
+        mobileL: "580px",
+        mobileXL: "640px",
+        tablet: "768px",
+        tabletM: "896px",
+        tabletL: "920px",
+        laptop: "1024px",
+        desktop: "1280px",
       },
     },
   },
