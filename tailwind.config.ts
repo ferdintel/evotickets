@@ -9,11 +9,12 @@ export default {
   theme: {
     extend: {
       colors: {
-        foreground: "var(--foreground)",
-        background: "var(--background)",
-        dark: "var(--dark)",
-        accent: "var(--accent)",
-        alternate: "var(--alternate)",
+        background: "#fff",
+        foreground: "#171717",
+        dark: "#20073b",
+        accent: "#f90e80",
+        alternate: "#8f3996",
+        "alternate-light": "#d19fd599",
       },
 
       fontFamily: {
