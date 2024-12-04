@@ -9,20 +9,21 @@ import PageLoader from "components/PageLoader";
 
 const ProtectedRoute = (WrappedComponent: React.ComponentType<any>) => {
   return (props: any) => {
-    const { pending, currentUser } = useAppSelector(selectAuth);
+    const auth = useAppSelector(selectAuth);
     const router = useRouter();
 
     useEffect(() => {
-      if (!pending && currentUser === null) {
+      if (!auth.pending && auth.currentUser === null) {
         router.push("/login");
       }
-    }, [currentUser, router]);
+    }, [auth]);
 
-    if (pending) {
+    if (auth.pending) {
       return <PageLoader />;
     }
 
-    return <WrappedComponent {...props} />;
+    if (auth.currentUser !== null) return <WrappedComponent {...props} />
+    else return <PageLoader />; 
   };
 };
 

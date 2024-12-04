@@ -12,3 +12,9 @@
   --error: #ff0033;
   --error-light: #d4496766;
 }
+
+/* remove eye on input:password */
+input[type="password"]::-ms-reveal,
+input[type="password"]::-ms-clear {
+  display: none;
+}

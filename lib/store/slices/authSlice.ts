@@ -26,6 +26,8 @@ const authSlice = createSlice({
       const userSerialized = {
         id: action.payload.id,
         email: action.payload.email,
+        firstName: action.payload.firstName,
+        lastName: action.payload.lastName,
         displayName: action.payload.displayName,
         photoUrl: action.payload.photoUrl,
       };

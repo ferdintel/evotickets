@@ -1,8 +1,9 @@
 "use client";
 
+import { doc, getDoc } from "firebase/firestore";
 import { useEffect } from "react";
 import { useDispatch } from "react-redux";
-import { firebaseAuth } from "lib/firebase";
+import { firebaseAuth, firestoreDB } from "lib/firebase";
 import { onAuthStateChanged } from "firebase/auth";
 import { setUser, removeUser } from "lib/store/slices/authSlice";
 
@@ -11,16 +12,31 @@ const AuthProvider = ({ children }: { children: React.ReactNode }) => {
 
   useEffect(() => {
     // monitoring user authentication
-    const unsubscribe = onAuthStateChanged(firebaseAuth, (user) => {
+    const unsubscribe = onAuthStateChanged(firebaseAuth, async (user) => {
       if (user) {
-        const userSerialized = {
-          id: user.uid,
-          email: user.email,
-          displayName: user.displayName,
-          photoUrl: user.photoURL,
-        };
+        // get user infos
+        try {
+          const userRef = doc(firestoreDB, "users", user.uid);
+          const userInfos = await getDoc(userRef);
 
-        dispatch(setUser(userSerialized));
+          console.log('!!ON VIENT DE LIRE DANS USERS !!');
+          
+
+          if (userInfos.exists()) {
+            const userSerialized = {
+              id: user.uid,
+              email: user.email,
+              firstName: userInfos.data().firstName,
+              lastName: userInfos.data().lastName,
+              displayName: user.displayName,
+              photoUrl: user.photoURL,
+            };
+
+            dispatch(setUser(userSerialized));
+          }
+        } catch (err) {
+          dispatch(removeUser());
+        }
       } else {
         dispatch(removeUser());
       }

@@ -46,7 +46,7 @@ const AuthForm = ({
     return (
       <div className="px-4 mobileM:px-5 min-h-screen flex justify-center items-center pt-8 pb-6 bg-gray-100">
         <div
-          className="max-w-[380px] w-full bg-white flex flex-col justify-center items-center px-6 pt-6 pb-4
+          className="max-w-[380px] w-full bg-white flex flex-col justify-center items-center px-6 py-6
           rounded-xl shadow"
         >
           <Link href="/" className="hover:opacity-80 duration-300">
@@ -56,7 +56,7 @@ const AuthForm = ({
               height={40}
               priority={true}
               alt="evotickets logo"
-              className="h-auto object-contain"
+              className="max-w-48 h-auto object-contain"
             />
           </Link>
 
@@ -138,6 +138,7 @@ const AuthForm = ({
         </div>
       </div>
     );
+  else return <PageLoader />;
 };
 
 export default AuthForm;

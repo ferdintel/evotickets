@@ -15,14 +15,20 @@ export const RegisterFormValidation: ZodType = z
       .regex(/^(?!.*^$).*/, { message: REQUIRED_FIELD_MESSAGE })
       .regex(/^[A-Za-zÀ-ÿ '-]+$/, {
         message: "Prénom invalide",
-      }),
+      })
+      .transform((val) =>
+        val[0].toUpperCase().concat(val.slice(1).toLocaleLowerCase())
+      ),
 
     lastName: z
       .string()
       .regex(/^(?!.*^$).*/, { message: REQUIRED_FIELD_MESSAGE })
       .regex(/^[A-Za-zÀ-ÿ '-]+$/, {
         message: "Nom invalide",
-      }),
+      })
+      .transform((val) =>
+        val[0].toUpperCase().concat(val.slice(1).toLocaleLowerCase())
+      ),
 
     password: z
       .string()

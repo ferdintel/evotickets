@@ -13,8 +13,6 @@ import toast from "react-hot-toast";
 import AuthForm from "components/AuthForm";
 import InputField from "components/FormControls/InputField";
 
-import { IoIosCloseCircle } from "react-icons/io";
-
 const Login = () => {
   const {
     handleSubmit,
@@ -35,6 +33,7 @@ const Login = () => {
       case "auth/invalid-email":
       case "auth/user-not-found":
       case "auth/wrong-password":
+      case "auth/invalid-credential":
         return "Email ou mot de passe incorrect.";
       case "auth/too-many-requests":
         return "Trop de tentatives, veuillez réessayer plus tard.";
@@ -55,31 +54,6 @@ const Login = () => {
         firebaseAuth,
         email,
         password
-      );
-
-      // show welcome message
-      toast.success(
-        (t) => (
-          <div className="flex items-start justify-between gap-x-3">
-            <p>
-              <span
-                className="font-bold bg-gradient-to-bl from-accent via-alternate
-                to-accent bg-clip-text text-transparent leading-normal"
-              >
-                Bienvenue, {JSON.stringify(user)} !
-              </span>{" "}
-              Nous sommes content de vous revoir.
-            </p>
-
-            <button
-              onClick={() => toast.dismiss(t.id)}
-              className="text-slate-400 hover:text-alternate duration-300"
-            >
-              <IoIosCloseCircle size={30} />
-            </button>
-          </div>
-        ),
-        { duration: 5000, icon: "🎉", style: { paddingRight: "0px" } }
       );
     } catch (err) {
       if (err instanceof FirebaseError) {
