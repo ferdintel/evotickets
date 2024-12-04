@@ -1,5 +1,11 @@
-const page = () => {
-  return <div>tickets</div>;
+"use client";
+
+import { useParams } from "next/navigation";
+import ProtectedRoute from "components/ProtectedRoute";
+
+const Tickets = () => {
+  const { id: eventId } = useParams<{ id: string }>();
+  return <div>List of tickets linked to event num: {eventId} </div>;
 };
 
-export default page;
+export default ProtectedRoute(Tickets);

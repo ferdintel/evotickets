@@ -45,7 +45,8 @@ const Checkbox = ({
       <span
         className="min-w-5 min-h-5 bg-background text-transparent rounded-md border-2 border-slate-400
         group-hover:border-alternate group-hover:shadow-[0_0_0_4px_#d19fd599] peer-checked:bg-alternate
-        peer-checked:border-alternate peer-checked:text-white duration-300 ease-out outline-accent"
+        peer-checked:border-alternate peer-checked:text-white peer-focus:border-alternate
+        peer-focus:shadow-[0_0_0_4px_#d19fd599] duration-300 ease-out"
       >
         <PiCheckFatFill size={16} />
       </span>

@@ -1,9 +1,9 @@
-import React from 'react'
+"use client";
+
+import ProtectedRoute from "components/ProtectedRoute";
 
 const Profile = () => {
-  return (
-    <div>Profile</div>
-  )
-}
+  return <div>Profile</div>;
+};
 
-export default Profile
+export default ProtectedRoute(Profile);

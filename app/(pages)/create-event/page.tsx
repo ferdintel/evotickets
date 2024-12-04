@@ -1,5 +1,9 @@
+"use client";
+
+import ProtectedRoute from "components/ProtectedRoute";
+
 const CreateEvent = () => {
   return <div>CreateEvent</div>;
 };
 
-export default CreateEvent;
+export default ProtectedRoute(CreateEvent);

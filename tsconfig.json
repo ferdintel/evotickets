@@ -24,13 +24,16 @@
     ],
     "paths": {
       "components/*": [
-        "./app/components/*"
+        "./components/*"
       ],
       "types/*": [
-        "./app/types/*"
+        "./types/*"
       ],
       "validations/*": [
-        "./app/validations/*"
+        "./validations/*"
+      ],
+      "lib/*": [
+        "./lib/*"
       ],
     }
   },
