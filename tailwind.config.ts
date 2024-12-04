@@ -15,6 +15,8 @@ export default {
         accent: "#f90e80",
         alternate: "#8f3996",
         "alternate-light": "#d19fd599",
+        error: "#dc0e40",
+        "error-light": "#d4496766"
       },
 
       fontFamily: {

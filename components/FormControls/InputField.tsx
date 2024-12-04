@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { HTMLInputAutoCompleteAttribute, useState } from "react";
 import { LuEye, LuEyeOff } from "react-icons/lu";
 import {
   FieldValues,
@@ -18,6 +18,7 @@ type InputFieldProps<T extends FieldValues> = {
   addStyles?: string;
   isAutoFocus?: boolean;
   isRequired?: boolean;
+  autoComplete?: HTMLInputAutoCompleteAttribute;
   errorMessage?: string;
 };
 
@@ -30,6 +31,7 @@ const InputField = <T extends Record<string, unknown>>({
   addStyles = "",
   isAutoFocus = false,
   isRequired = true,
+  autoComplete,
   errorMessage = "",
 }: InputFieldProps<T>) => {
   const [isPassword, setIsPassword] = useState(true);
@@ -37,7 +39,7 @@ const InputField = <T extends Record<string, unknown>>({
 
   return (
     <div className="flex flex-col gap-y-1">
-      <label className="relative flex items-center">
+      <label className={`relative flex items-center ${errorMessage && "[--alternate:var(--error)] [--alternate-light:var(--error-light)]"}`}>
         <input
           type={isPassword ? inputType : "text"}
           {...register(name, registerOptions )}
@@ -45,9 +47,11 @@ const InputField = <T extends Record<string, unknown>>({
           placeholder={placeholder}
           autoFocus={isAutoFocus}
           required={isRequired}
-          className={`w-full px-4 py-3 placeholder:font-medium outline-none border border-slate-300 rounded-xl
-          hover:border-alternate focus:border-alternate focus:shadow-[0_0_0_1px_var(--alternate),0_0_0_3px_inset_var(--alternate-light)]
-          duration-300 ${inputType === "password" && "pr-12"} ${addStyles}`}
+          autoComplete={autoComplete}
+          className={`w-full px-4 py-3 placeholder:font-medium rounded-xl outline-none border
+          ${errorMessage ? "border-error": "border-slate-300 hover:border-slate-500"}
+          focus:shadow-[0_0_0_1px_var(--alternate),0_0_0_3px_inset_var(--alternate-light)]
+          focus:border-alternate duration-300 ${inputType === "password" && "pr-12"} ${addStyles}`}
         />
 
         {/* for input:password */}
@@ -68,7 +72,7 @@ const InputField = <T extends Record<string, unknown>>({
       </label>
 
       {errorMessage && (
-        <p className="ml-1 cursor-default text-xs mb-1 text-[#dc0e40]">
+        <p className="ml-1 cursor-default text-xs mb-1 text-error">
           {errorMessage}
         </p>
       )}

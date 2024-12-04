@@ -105,6 +105,7 @@ const Login = () => {
           register={register}
           placeholder="Adresse email"
           isAutoFocus={true}
+          autoComplete="email"
           errorMessage={errors.email && errors.email.message}
         />
 
@@ -113,6 +114,7 @@ const Login = () => {
           name="password"
           register={register}
           placeholder="Mot de passe"
+          autoComplete="current-password"
           errorMessage={errors.password && errors.password.message}
         />
       </div>

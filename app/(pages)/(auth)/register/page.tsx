@@ -114,6 +114,7 @@ const Register = () => {
           register={register}
           placeholder="Adresse email"
           isAutoFocus={true}
+          autoComplete="email"
           errorMessage={errors.email && errors.email.message}
         />
 
@@ -138,6 +139,7 @@ const Register = () => {
           name="password"
           register={register}
           placeholder="Mot de passe"
+          autoComplete="new-password"
           errorMessage={errors.password && errors.password.message}
         />
 
@@ -146,6 +148,7 @@ const Register = () => {
           name="confirmPassword"
           register={register}
           placeholder="Confirmer le mot de passe"
+          autoComplete="new-password"
           errorMessage={
             errors.confirmPassword && errors.confirmPassword.message
           }
