@@ -1,32 +1,52 @@
 "use client";
 
-import { useRef, useState } from "react";
 import Image from "next/image";
+import toast from "react-hot-toast";
+import { useRef, useState } from "react";
+import { EventCover } from "types/Events";
 import { RiCloseFill, RiUploadCloud2Fill } from "react-icons/ri";
-import { MdCancel } from "react-icons/md";
 
 type ImageFileSelectProps = {
   title?: string;
   imageAddStyles?: string;
   parentWrapperAddStyles?: string;
-  imageFile: string | null;
-  setImageFile: (file: string | null) => void;
+  eventCoverPreview: string | null;
+  setEventCover: React.Dispatch<React.SetStateAction<EventCover>>;
+  maxSizeInByte?: number;
 };
 
 const ImageFileSelect = ({
   title = "",
   imageAddStyles = "",
   parentWrapperAddStyles = "",
-  imageFile,
-  setImageFile,
+  eventCoverPreview,
+  setEventCover,
+  maxSizeInByte,
 }: ImageFileSelectProps) => {
   const inputFileRef = useRef<HTMLInputElement>(null);
   const [isDragActive, setIsDragActive] = useState(false);
 
+  const updateImageState = (file: File | null) => {
+    if (file) {
+      // check image max size
+      if (maxSizeInByte && file.size > maxSizeInByte) {
+        toast.error(`L'image sélectionnée est trop grande.`);
+      } else {
+        const previewUrl = URL.createObjectURL(file);
+        setEventCover({
+          imageFile: file,
+          imagePreview: previewUrl,
+        });
+      }
+    } else {
+      setEventCover({ imageFile: null, imagePreview: null });
+    }
+  };
+
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const files = e.target.files;
     if (files && files.length > 0) {
-      setImageFile(URL.createObjectURL(files[0]));
+      updateImageState(files[0]);
     }
   };
 
@@ -35,15 +55,15 @@ const ImageFileSelect = ({
     inputFileRef.current?.click();
   };
 
-  const removeSelectedImage = () => setImageFile(null);
+  const removeSelectedImage = () => updateImageState(null);
 
-  // Gestion du glisser-déposer
+  // handle drag and drop
   const handleDrop = (e: React.DragEvent<HTMLDivElement>) => {
     e.preventDefault();
     setIsDragActive(false);
     const files = e.dataTransfer.files;
     if (files && files.length > 0) {
-      setImageFile(URL.createObjectURL(files[0]));
+      updateImageState(files[0]);
     }
   };
 
@@ -84,12 +104,12 @@ const ImageFileSelect = ({
         }
         duration-300 group flex items-center justify-center overflow-hidden`}
       >
-        {imageFile ? (
+        {eventCoverPreview ? (
           <div className="h-full w-full relative">
             <Image
               width={200}
               height={200}
-              src={imageFile}
+              src={eventCoverPreview}
               alt="Uploaded Image"
               className={`w-full h-full object-cover ${imageAddStyles}`}
             />
@@ -101,10 +121,10 @@ const ImageFileSelect = ({
                 e.stopPropagation();
                 removeSelectedImage();
               }}
-              className="absolute right-2 top-2 bg-foreground text-white rounded-md p-1
+              className="absolute right-2 top-2 bg-foreground text-white rounded-md p-[2px]
               hover:bg-foreground/90 duration-300"
             >
-              <MdCancel size={24} />
+              <RiCloseFill size={24} />
             </button>
 
             <p

@@ -13,8 +13,8 @@ import { createUserWithEmailAndPassword } from "firebase/auth";
 import toast from "react-hot-toast";
 import AuthForm from "components/AuthForm";
 import InputField from "components/FormControls/InputField";
+import ToastSuccessMessage from "components/ToastSuccessMessage";
 
-import { IoIosCloseCircle } from "react-icons/io";
 
 const Register = () => {
   const {
@@ -69,24 +69,17 @@ const Register = () => {
       // show success message
       toast.success(
         (t) => (
-          <div className="flex items-start justify-between gap-x-3">
+          <ToastSuccessMessage toastId={t.id}>
             <p>
               <span
                 className="font-bold bg-gradient-to-bl from-accent via-alternate
-                      to-accent bg-clip-text text-transparent leading-normal"
+                to-accent bg-clip-text text-transparent leading-normal"
               >
                 Félicitations, {firstName} !
               </span>{" "}
               Votre compte a été créé avec succès.
             </p>
-
-            <button
-              onClick={() => toast.dismiss(t.id)}
-              className="text-slate-400 hover:text-alternate duration-300"
-            >
-              <IoIosCloseCircle size={30} />
-            </button>
-          </div>
+          </ToastSuccessMessage>
         ),
         { duration: 8000, icon: "🎉", style: { paddingRight: "0px" } }
       );
@@ -112,8 +105,8 @@ const Register = () => {
           fieldName="email"
           register={register}
           placeholder="Adresse email"
-          isAutoFocus={true}
           autoComplete="email"
+          isAutoFocus={true}
           errorMessage={errors.email?.message}
         />
 
@@ -148,9 +141,7 @@ const Register = () => {
           register={register}
           placeholder="Confirmer le mot de passe"
           autoComplete="new-password"
-          errorMessage={
-            errors.confirmPassword?.message
-          }
+          errorMessage={errors.confirmPassword?.message}
         />
       </div>
     </AuthForm>

@@ -13,6 +13,7 @@ const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   useEffect(() => {
     // monitoring user authentication
     const unsubscribe = onAuthStateChanged(firebaseAuth, async (user) => {
+      console.log('!! ON A ÉTÉ DANS onAuthStateChanged !!');
       if (user) {
         // get user infos
         try {

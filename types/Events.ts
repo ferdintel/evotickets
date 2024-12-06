@@ -1,6 +1,6 @@
 import { eventCategoryValues } from "validations/common";
 
-export type EventCategory = typeof eventCategoryValues[number];
+export type EventCategory = (typeof eventCategoryValues)[number];
 
 export type CreateEventFormValues = {
   eventName: string;
@@ -9,5 +9,10 @@ export type CreateEventFormValues = {
     begin: Date | string;
     end: Date | string;
   };
-  eventPlace: string;
+  eventLocation: string;
+};
+
+export type EventCover = {
+  imageFile: File | null;
+  imagePreview: string | null;
 };

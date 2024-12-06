@@ -1,20 +1,26 @@
 "use client";
 
 import { useState } from "react";
-import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
+import { useRouter } from "next/navigation";
 import { toLocalDatetimeString } from "utils/time";
-import { CreateEventFormValues } from "types/Events";
+import { CreateEventFormValues, EventCover } from "types/Events";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { FirebaseError } from "firebase/app";
+import { firestoreDB } from "lib/firebase";
+import { addDoc, collection, Timestamp } from "firebase/firestore";
 import { DEFAULT_EVENT_CATEGORY } from "validations/common";
 import { CreateEventFormValidation } from "validations/events";
 
+import toast from "react-hot-toast";
 import Header from "components/Header";
+import FilledButton from "components/FilledButton";
 import ProtectedRoute from "components/ProtectedRoute";
 import ImageFileSelect from "components/ImageFileSelect";
 import InputField from "components/FormControls/InputField";
 import SelectField from "components/FormControls/SelectField";
-import FilledButton from "components/FilledButton";
+import ToastSuccessMessage from "components/ToastSuccessMessage";
+import { uploadEventCoverToCloudStorage } from "lib/firebase/cloudStorage";
 
 const CreateEvent = () => {
   const nowWithTimeZone = toLocalDatetimeString(new Date());
@@ -35,16 +41,67 @@ const CreateEvent = () => {
         begin: nowWithTimeZone,
         end: nowPlus2HourWithTimeZone,
       },
-      eventPlace: "",
+      eventLocation: "",
     },
     mode: "onTouched",
   });
 
   const router = useRouter();
-  const [eventCoverImage, setEventCoverImage] = useState<string | null>(null);
+  const [eventCover, setEventCover] = useState<EventCover>({
+    imageFile: null,
+    imagePreview: null,
+  });
 
   const createEvent = async (eventData: CreateEventFormValues) => {
-    console.log("eventData:", eventData);
+    try {
+      // 1 - upload event cover in cloud storage if is provided
+      let eventCoverUrl = eventCover.imagePreview
+        ? await uploadEventCoverToCloudStorage(eventCover.imageFile as File)
+        : null;
+
+      // 2 - store event data in firestore
+      const eventsCollectionRef = collection(firestoreDB, "events");
+      const data = {
+        name: eventData.eventName,
+        category: eventData.eventCategory,
+        beginDate: Timestamp.fromDate(eventData.eventDate.begin as Date),
+        endDate: Timestamp.fromDate(eventData.eventDate.end as Date),
+        location: eventData.eventLocation,
+        imageCoverUrl: eventCoverUrl,
+      };
+      const eventCreated = await addDoc(eventsCollectionRef, data);
+
+      // if event is created
+      if (eventCreated.id) {
+        // go to events page (to show list of events)
+        router.push("/events", { scroll: true });
+
+        // show success message
+        toast.success(
+          (t) => (
+            <ToastSuccessMessage toastId={t.id}>
+              <p>
+                Bravo ! L'événement{" "}
+                <span
+                  className="font-bold bg-gradient-to-bl from-accent via-alternate
+                to-accent bg-clip-text text-transparent leading-normal"
+                >
+                  {eventData.eventName}
+                </span>{" "}
+                a été créé avec succès !
+              </p>
+            </ToastSuccessMessage>
+          ),
+          { duration: 5000, icon: "👏🏻", style: { paddingRight: "0px" } }
+        );
+      }
+    } catch (err) {
+      if (err instanceof FirebaseError) {
+        toast.error(err.message, {
+          duration: 5000,
+        });
+      }
+    }
   };
 
   return (
@@ -63,8 +120,8 @@ const CreateEvent = () => {
               <InputField
                 fieldName="eventName"
                 labelText="Nom"
-                register={register}
                 placeholder="Ex : Concert Moïse Mbiye"
+                register={register}
                 isAutoFocus={true}
                 errorMessage={errors.eventName?.message}
               />
@@ -97,17 +154,19 @@ const CreateEvent = () => {
             </div>
 
             <InputField
-              fieldName="eventPlace"
+              fieldName="eventLocation"
               labelText="Localisation"
               register={register}
               placeholder="Ex : Avenue Des Huileries, Kinshasa"
-              errorMessage={errors.eventPlace?.message}
+              errorMessage={errors.eventLocation?.message}
             />
 
             <ImageFileSelect
-              title="Image de couverture (optionnelle)"
-              imageFile={eventCoverImage}
-              setImageFile={setEventCoverImage}
+              title="Image de couverture (falcultative)"
+              eventCoverPreview={eventCover.imagePreview}
+              setEventCover={setEventCover}
+              // max 5Mb
+              maxSizeInByte={1000 * 1000 * 5}
             />
           </div>
 

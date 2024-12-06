@@ -54,7 +54,7 @@ const Header = () => {
       <div className="flex items-center gap-x-4 text-white">
         {/* navlinks */}
         <nav className="flex items-center gap-x-4">
-          <Link href="/dashboard" className="hover:text-white/80 duration-300">
+          <Link href="/dashboard" className="hover:text-white/80 duration-300 text-nowrap">
             Tableau de bord
           </Link>
 

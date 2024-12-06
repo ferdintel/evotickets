@@ -77,8 +77,8 @@ const Login = () => {
           fieldName="email"
           register={register}
           placeholder="Adresse email"
-          isAutoFocus={true}
           autoComplete="email"
+          isAutoFocus={true}
           errorMessage={errors.email?.message}
         />
 
