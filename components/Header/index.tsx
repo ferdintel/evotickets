@@ -124,7 +124,7 @@ const Header = () => {
             </div>
           )}
 
-          {/* wrapper to hide user dropdown menu when clicking */}
+          {/* wrapper to hide the user dropdown menu when clicked */}
           {showDropdownMenu && (
             <div
               onClick={hideUserDropdownMenu}

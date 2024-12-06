@@ -72,7 +72,7 @@ const Register = () => {
           <ToastSuccessMessage toastId={t.id}>
             <p>
               <span
-                className="font-bold bg-gradient-to-bl from-accent via-alternate
+                className="font-semibold bg-gradient-to-bl from-accent via-alternate
                 to-accent bg-clip-text text-transparent leading-normal"
               >
                 Félicitations, {firstName} !

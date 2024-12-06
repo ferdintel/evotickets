@@ -8,7 +8,7 @@ import { CreateEventFormValues, EventCover } from "types/Events";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { FirebaseError } from "firebase/app";
 import { firestoreDB } from "lib/firebase";
-import { addDoc, collection, Timestamp } from "firebase/firestore";
+import { addDoc, collection, serverTimestamp, Timestamp } from "firebase/firestore";
 import { DEFAULT_EVENT_CATEGORY } from "validations/common";
 import { CreateEventFormValidation } from "validations/events";
 
@@ -68,6 +68,8 @@ const CreateEvent = () => {
         endDate: Timestamp.fromDate(eventData.eventDate.end as Date),
         location: eventData.eventLocation,
         imageCoverUrl: eventCoverUrl,
+        createdAt: serverTimestamp(),
+        updatedAt: serverTimestamp()
       };
       const eventCreated = await addDoc(eventsCollectionRef, data);
 
@@ -83,8 +85,8 @@ const CreateEvent = () => {
               <p>
                 Bravo ! L'événement{" "}
                 <span
-                  className="font-bold bg-gradient-to-bl from-accent via-alternate
-                to-accent bg-clip-text text-transparent leading-normal"
+                  className="font-semibold bg-gradient-to-bl from-accent via-alternate
+                  to-accent bg-clip-text text-transparent leading-normal"
                 >
                   {eventData.eventName}
                 </span>{" "}
@@ -108,8 +110,8 @@ const CreateEvent = () => {
     <>
       <Header />
 
-      <main className="my-8 max-w-2xl mx-auto w-full flex flex-col gap-y-3 ">
-        <h1 className="text-xl font-bold">Créer un événement</h1>
+      <main className="my-8 max-w-2xl mx-auto w-full flex flex-col gap-y-3">
+        <h1 className="text-xl font-semibold">Créer un événement</h1>
 
         <form
           onSubmit={handleSubmit(createEvent)}

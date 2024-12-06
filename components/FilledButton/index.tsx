@@ -1,3 +1,4 @@
+import Link from "next/link";
 import { BiLoaderCircle } from "react-icons/bi";
 
 type FilledButtonProps = {
@@ -8,6 +9,7 @@ type FilledButtonProps = {
   onClick?: () => void;
   isLoading?: boolean;
   variant?: "primary" | "slate";
+  link?: string;
 };
 
 const FilledButton = ({
@@ -18,6 +20,7 @@ const FilledButton = ({
   onClick,
   isLoading = false,
   variant = "primary",
+  link = "",
 }: FilledButtonProps) => {
   const commonStyles =
     "flex items-center justify-center gap-x-4 font-semibold px-4 py-3 rounded-lg text-nowrap select-none disabled:bg-slate-200 disabled:text-foreground/50 disabled:shadow-[0_0_0_1px_inset_#94a3b8] disabled:cursor-not-allowed duration-300";
@@ -27,22 +30,34 @@ const FilledButton = ({
     "bg-[#00000012] text-foreground/90 hover:bg-[#0000001f] focus:bg-[#0000001f] focus:shadow-[0px_0px_0px_3px_inset_#1111112b]";
 
   return (
-    <button
-      type={type}
-      disabled={disabled}
-      onClick={onClick}
-      className={`${commonStyles} ${
-        variant === "primary" ? variantPrimaryStyles : variantSlateStyles
-      } 
-      ${addStyles}`}
-    >
-      {children}
-      {isLoading && (
-        <span className="animate-spin text-dark/50">
-          <BiLoaderCircle size={20} />
-        </span>
+    <>
+      {link ? (
+        <Link
+          href={link}
+          className={`${commonStyles} 
+          ${variant === "primary" ? variantPrimaryStyles : variantSlateStyles} 
+          ${addStyles}`}
+        >
+          {children}
+        </Link>
+      ) : (
+        <button
+          type={type}
+          disabled={disabled}
+          onClick={onClick}
+          className={`${commonStyles} 
+          ${variant === "primary" ? variantPrimaryStyles : variantSlateStyles} 
+          ${addStyles}`}
+        >
+          {children}
+          {isLoading && (
+            <span className="animate-spin text-dark/50">
+              <BiLoaderCircle size={20} />
+            </span>
+          )}
+        </button>
       )}
-    </button>
+    </>
   );
 };
 

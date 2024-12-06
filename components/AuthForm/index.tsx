@@ -57,7 +57,7 @@ const AuthForm = ({
           </Link>
 
           {/* title */}
-          <h2 className="text-lg font-bold mt-6 mb-4">
+          <h2 className="text-lg font-semibold mt-6 mb-4">
             {formType === "login"
               ? "Connexion"
               : "Inscrivez-vous dès maintenant"}
@@ -117,7 +117,7 @@ const AuthForm = ({
             </span>
 
             <Link
-              className="font-bold text-nowrap hover:text-alternate duration-300"
+              className="font-semibold text-nowrap hover:text-alternate duration-300"
               href={formType === "login" ? "/register" : "/login"}
             >
               {formType === "login" ? "Créer un compte" : "Connectez-vous"}

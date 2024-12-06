@@ -8,7 +8,7 @@ const Dashboard = () => {
     <>
       <Header />
 
-      <main className="flex-grow border border-red-500">
+      <main>
         <h1>Dashboard</h1>
       </main>
     </>
