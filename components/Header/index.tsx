@@ -10,9 +10,10 @@ import { firebaseAuth } from "lib/firebase";
 import { useAppDispatch, useAppSelector } from "lib/store/hooks";
 import { removeUser, selectAuth, setPending } from "lib/store/slices/authSlice";
 
-import { RiArrowDownSLine } from "react-icons/ri";
-import { FaRegCircleUser } from "react-icons/fa6";
+import { BiLoaderCircle } from "react-icons/bi";
+import { LuCalendarPlus } from "react-icons/lu";
 import { HiOutlineLogout } from "react-icons/hi";
+import { FaRegCircleUser } from "react-icons/fa6";
 
 const Header = () => {
   const [showDropdownMenu, setShowDropdownMenu] = useState(false);
@@ -20,7 +21,7 @@ const Header = () => {
     setShowDropdownMenu((prevState) => !prevState);
   const hideUserDropdownMenu = () => setShowDropdownMenu(false);
 
-  const { currentUser } = useAppSelector(selectAuth);
+  const { currentUser, pending } = useAppSelector(selectAuth);
   const dispatch = useAppDispatch();
 
   const logout = async () => {
@@ -33,8 +34,12 @@ const Header = () => {
   };
 
   return (
-    <header className="bg-dark px-6 py-4 flex items-center justify-between">
-      <Link href="/dashboard" className="hover:opacity-80 duration-300">
+    <header
+      className="-mx-4 mobileM:-mx-5 px-4 mobileM:px-5 py-4 bg-dark flex items-center
+      justify-between"
+    >
+      {/* logo */}
+      <Link href="/" className="hover:opacity-80 duration-300">
         <Image
           src="/images/site-logos/logo-evotickets.png"
           width={200}
@@ -45,52 +50,88 @@ const Header = () => {
         />
       </Link>
 
-      <div className="relative">
-        {/* current user */}
-        <button
-          onClick={toggleUserDropdownMenu}
-          className="flex items-center text-background hover:text-white/80 duration-300"
-        >
-          <span className="font-medium">
-            {`${currentUser?.firstName} ${currentUser?.lastName}`}
-          </span>
-          <FaRegCircleUser size={28} className="ml-3 mr-2" />
-          <RiArrowDownSLine size={20} />
-        </button>
+      {/* right content */}
+      <div className="flex items-center gap-x-4 text-white">
+        {/* navlinks */}
+        <nav className="flex items-center gap-x-4">
+          <Link href="/dashboard" className="hover:text-white/80 duration-300">
+            Tableau de bord
+          </Link>
 
-        {/* profile and logout buttons */}
-        {showDropdownMenu && (
-          <div
-            className="absolute top-10 right-0 min-w-52 bg-white rounded-xl p-2 flex flex-col gap-y-1
-            shadow-[#06182c66_0px_0px_0px_2px,#06182ca6_0px_4px_6px_-1px,#ffffff14_0px_1px_0px_inset] z-10"
+          <Link href="/events" className="hover:text-white/80 duration-300">
+            Événements
+          </Link>
+
+          <Link
+            href="/invitations"
+            className="hover:text-white/80 duration-300"
           >
-            <Link
-              href="/profile"
-              className="flex items-center gap-x-2 p-3 rounded-lg font-medium text-foreground/85
-              hover:bg-alternate-light/40 hover:text-alternate active:bg-alternate-light duration-300"
-            >
-              <FaRegCircleUser size={20} />
-              Mon profil
-            </Link>
+            Invitations
+          </Link>
 
-            <button
-              onClick={logout}
-              className="flex items-center gap-x-2 p-3 rounded-lg font-medium text-foreground/85
-              hover:bg-alternate-light/40 hover:text-alternate active:bg-alternate-light duration-300"
-            >
-              <HiOutlineLogout size={20} />
-              Déconnexion
-            </button>
-          </div>
-        )}
+          <Link
+            href="/events/create"
+            title="Créer un événement"
+            className="p-2 rounded-[4px] hover:bg-alternate-light focus:bg-alternate-light focus:shadow-[0px_0px_0px_4px_#ffffff1f]
+            duration-300"
+          >
+            <LuCalendarPlus size={24} />
+          </Link>
+        </nav>
 
-        {/* wrapper to hide user dropdown menu when clicking */}
-        {showDropdownMenu && (
-          <div
-            onClick={hideUserDropdownMenu}
-            className="bg-transparent fixed top-0 left-0 w-screen h-screen z-[5]"
-          ></div>
-        )}
+        {/* user account */}
+        <div className="relative">
+          {/* current user */}
+          <button
+            title="Mon compte"
+            onClick={toggleUserDropdownMenu}
+            className="w-10 h-10 bg-alternate/90 rounded-[4px] font-medium hover:bg-alternate-light
+            focus:bg-alternate focus:shadow-[0px_0px_0px_4px_#ffffff1f] flex justify-center items-center
+            duration-300"
+          >
+            {pending ? (
+              <span className="animate-spin">
+                <BiLoaderCircle size={20} />
+              </span>
+            ) : (
+              currentUser?.firstName?.slice(0, 1)
+            )}
+          </button>
+
+          {/* profile and logout buttons */}
+          {showDropdownMenu && (
+            <div
+              className="absolute top-12 right-0 min-w-52 bg-white rounded-xl p-2 flex flex-col gap-y-1
+              shadow-[#00000029_0px_1px_4px,#06182c0d_0px_0px_0px_1px] z-10"
+            >
+              <Link
+                href="/profile"
+                className="flex items-center gap-x-2 p-3 rounded-lg font-medium text-foreground/85
+                hover:bg-alternate-light/40 hover:text-alternate active:bg-alternate-light duration-300"
+              >
+                <FaRegCircleUser size={20} />
+                Mon profil
+              </Link>
+
+              <button
+                onClick={logout}
+                className="flex items-center gap-x-2 p-3 rounded-lg font-medium text-foreground/85
+                hover:bg-alternate-light/40 hover:text-alternate active:bg-alternate-light duration-300"
+              >
+                <HiOutlineLogout size={20} />
+                Déconnexion
+              </button>
+            </div>
+          )}
+
+          {/* wrapper to hide user dropdown menu when clicking */}
+          {showDropdownMenu && (
+            <div
+              onClick={hideUserDropdownMenu}
+              className="bg-transparent fixed top-0 left-0 w-screen h-screen z-[5]"
+            ></div>
+          )}
+        </div>
       </div>
     </header>
   );

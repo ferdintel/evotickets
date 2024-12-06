@@ -11,14 +11,11 @@ import { useEffect, useState } from "react";
 import { useAppSelector } from "lib/store/hooks";
 import { selectAuth } from "lib/store/slices/authSlice";
 
-import { BiLoaderCircle } from "react-icons/bi";
-
 type AuthFormProps = {
   formType: "login" | "register";
   children: React.ReactNode;
   handleSubmit: React.FormEventHandler<HTMLFormElement>;
   formIsSubmitting: boolean;
-  formIsValid: boolean;
 };
 
 const AuthForm = ({
@@ -26,7 +23,6 @@ const AuthForm = ({
   children,
   handleSubmit,
   formIsSubmitting,
-  formIsValid,
 }: AuthFormProps) => {
   // to toggle button to submit when checked terms of use
   const [isTermsAccepted, setIsTermsAccepted] = useState(false);
@@ -44,7 +40,7 @@ const AuthForm = ({
 
   if (auth.currentUser === null)
     return (
-      <div className="px-4 mobileM:px-5 min-h-screen flex justify-center items-center pt-8 pb-6 bg-gray-100">
+      <div className="min-h-screen py-8 flex justify-center items-center">
         <div
           className="max-w-[380px] w-full bg-white flex flex-col justify-center items-center px-6 py-6
           rounded-xl shadow"
@@ -102,22 +98,14 @@ const AuthForm = ({
 
             <FilledButton
               type="submit"
-              addStyles="mt-4 flex items-center justify-between gap-x-3"
+              addStyles="mt-4"
+              isLoading={formIsSubmitting}
               disabled={
                 (formType === "register" && !isTermsAccepted) ||
-                !formIsValid ||
                 formIsSubmitting
               }
             >
-              <span className="w-full">
-                {formType === "login" ? "Se connecter" : "S'inscrire"}
-              </span>
-
-              {formIsSubmitting && (
-                <span className="animate-spin text-dark/50">
-                  <BiLoaderCircle size={20} />
-                </span>
-              )}
+              {formType === "login" ? "Se connecter" : "S'inscrire"}
             </FilledButton>
           </form>
 

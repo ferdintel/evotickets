@@ -4,13 +4,14 @@ import ProtectedRoute from "components/ProtectedRoute";
 import Header from "components/Header";
 
 const Dashboard = () => {
-
-
   return (
-    <div>
+    <>
       <Header />
-      <h1>Dashboard</h1>
-    </div>
+
+      <main className="flex-grow border border-red-500">
+        <h1>Dashboard</h1>
+      </main>
+    </>
   );
 };
 

@@ -20,7 +20,7 @@ const Register = () => {
   const {
     handleSubmit,
     register,
-    formState: { errors, isSubmitting, isValid },
+    formState: { errors, isSubmitting },
   } = useForm<RegisterFormValues>({
     resolver: zodResolver(RegisterFormValidation),
     defaultValues: {
@@ -105,52 +105,51 @@ const Register = () => {
       formType="register"
       handleSubmit={handleSubmit(registerWithEmailAndPassword)}
       formIsSubmitting={isSubmitting}
-      formIsValid={isValid}
     >
       <div className="w-full flex flex-col gap-y-2">
         <InputField
           inputType="email"
-          name="email"
+          fieldName="email"
           register={register}
           placeholder="Adresse email"
           isAutoFocus={true}
           autoComplete="email"
-          errorMessage={errors.email && errors.email.message}
+          errorMessage={errors.email?.message}
         />
 
         <div className="flex gap-x-2">
           <InputField
-            name="firstName"
+            fieldName="firstName"
             register={register}
             placeholder="Prénom"
-            errorMessage={errors.firstName && errors.firstName.message}
+            errorMessage={errors.firstName?.message}
           />
 
           <InputField
-            name="lastName"
+            fieldName="lastName"
             register={register}
             placeholder="Nom"
-            errorMessage={errors.lastName && errors.lastName.message}
+            errorMessage={errors.lastName?.message}
           />
         </div>
 
         <InputField
           inputType="password"
-          name="password"
+          fieldName="password"
           register={register}
           placeholder="Mot de passe"
           autoComplete="new-password"
-          errorMessage={errors.password && errors.password.message}
+          errorMessage={errors.password?.message}
         />
 
         <InputField
           inputType="password"
-          name="confirmPassword"
+          fieldName="confirmPassword"
           register={register}
           placeholder="Confirmer le mot de passe"
           autoComplete="new-password"
           errorMessage={
-            errors.confirmPassword && errors.confirmPassword.message
+            errors.confirmPassword?.message
           }
         />
       </div>

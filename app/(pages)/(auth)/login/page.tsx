@@ -17,7 +17,7 @@ const Login = () => {
   const {
     handleSubmit,
     register,
-    formState: { errors, isSubmitting, isValid },
+    formState: { errors, isSubmitting },
   } = useForm<LoginFormValues>({
     resolver: zodResolver(LoginFormValidation),
     defaultValues: {
@@ -70,26 +70,25 @@ const Login = () => {
       formType="login"
       handleSubmit={handleSubmit(loginWithEmailAndPassword)}
       formIsSubmitting={isSubmitting}
-      formIsValid={isValid}
     >
       <div className="w-full flex flex-col gap-y-2">
         <InputField
           inputType="email"
-          name="email"
+          fieldName="email"
           register={register}
           placeholder="Adresse email"
           isAutoFocus={true}
           autoComplete="email"
-          errorMessage={errors.email && errors.email.message}
+          errorMessage={errors.email?.message}
         />
 
         <InputField
           inputType="password"
-          name="password"
+          fieldName="password"
           register={register}
           placeholder="Mot de passe"
           autoComplete="current-password"
-          errorMessage={errors.password && errors.password.message}
+          errorMessage={errors.password?.message}
         />
       </div>
     </AuthForm>

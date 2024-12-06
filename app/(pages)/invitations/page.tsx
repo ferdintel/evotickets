@@ -3,13 +3,13 @@
 import Header from "components/Header";
 import ProtectedRoute from "components/ProtectedRoute";
 
-const CreateEvent = () => {
+const Invitations = () => {
   return (
     <div>
       <Header />
-      <h1>CreateEvent</h1>
+      <h1>Invitations</h1>
     </div>
   );
 };
 
-export default ProtectedRoute(CreateEvent);
+export default ProtectedRoute(Invitations);
