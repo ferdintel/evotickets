@@ -1,6 +1,6 @@
 import { z, ZodType } from "zod";
 import { CreateEventFormValues, EventCategory } from "types/Events";
-import { eventCategoryValues } from "./common";
+import { defaultEventCategoryValues } from "./common";
 
 export const CreateEventFormValidation: ZodType<CreateEventFormValues> =
   z.object({
@@ -10,7 +10,9 @@ export const CreateEventFormValidation: ZodType<CreateEventFormValues> =
       .min(1, "Le nom de l'événement est obligatoire"),
 
     eventCategory: z.enum(
-      eventCategoryValues as [(typeof eventCategoryValues)[number]],
+      defaultEventCategoryValues as [
+        (typeof defaultEventCategoryValues)[number]
+      ],
       {
         errorMap: () => ({ message: "La catégorie est obligatoire" }),
       }

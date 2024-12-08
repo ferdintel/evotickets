@@ -1,7 +1,7 @@
 import { Timestamp } from "firebase/firestore";
-import { eventCategoryValues } from "validations/common";
+import { defaultEventCategoryValues } from "validations/common";
 
-export type EventCategory = (typeof eventCategoryValues)[number];
+export type EventCategory = (typeof defaultEventCategoryValues)[number];
 
 export type CreateEventFormValues = {
   eventName: string;
@@ -18,14 +18,34 @@ export type EventCover = {
   imagePreview: string | null;
 };
 
-export interface IEventList {
-  id: string;
+// event data to store in firestore
+export type StoreEventDataType = {
   name: string;
   category: EventCategory;
   beginDate: Timestamp;
   endDate: Timestamp;
   location: string;
-  imageCoverUrl: string | null;
+  imageCoverUrl: string;
+  createdBy: string;
   createdAt: Timestamp;
   updatedAt: Timestamp;
-}
+};
+
+// event data getted from firestore
+export type EventDataType = StoreEventDataType & {
+  id: string;
+};
+
+// to set current event data (redux store)
+export type CurrentEventDataSerialized = {
+  id: string;
+  name: string;
+  category: string;
+  beginDate: string;
+  endDate: string;
+  location: string;
+  imageCoverUrl: string;
+  createdBy: string;
+  createdAt: string;
+  updatedAt: string;
+};

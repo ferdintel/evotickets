@@ -95,8 +95,8 @@ const ImageFileSelect = ({
         onDragOver={handleDragOver}
         onDragEnter={handleDragEnter}
         onDragLeave={handleDragLeave}
-        className={`h-52 rounded-lg border-2 border-dashed border-slate-300 hover:border-slate-500
-        peer-hover:border-slate-500 focus:border-alternate cursor-pointer
+        className={`h-52 rounded-lg border-2 border-dashed border-gray-300 hover:border-gray-500
+        peer-hover:border-gray-500 focus:border-alternate cursor-pointer
         focus:shadow-[0_0_0_1px_var(--alternate),0_0_0_3px_inset_var(--alternate-light)]
         ${
           isDragActive &&

@@ -23,16 +23,7 @@ const authSlice = createSlice({
     },
 
     setUser: (state, action: PayloadAction<User>) => {
-      const userSerialized = {
-        id: action.payload.id,
-        email: action.payload.email,
-        firstName: action.payload.firstName,
-        lastName: action.payload.lastName,
-        displayName: action.payload.displayName,
-        photoUrl: action.payload.photoUrl,
-      };
-
-      state.currentUser = userSerialized;
+      state.currentUser = action.payload;
       state.pending = false;
     },
 

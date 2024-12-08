@@ -43,7 +43,7 @@ const Checkbox = ({
 
       {/* check icon */}
       <span
-        className="min-w-5 min-h-5 bg-background text-transparent rounded-md border-2 border-slate-400
+        className="min-w-5 min-h-5 bg-background text-transparent rounded-md border-2 border-gray-400
         group-hover:border-alternate group-hover:shadow-[0_0_0_4px_#d19fd599] peer-checked:bg-alternate
         peer-checked:border-alternate peer-checked:text-white peer-focus:border-alternate
         peer-focus:shadow-[0_0_0_4px_#d19fd599] duration-300 ease-out"

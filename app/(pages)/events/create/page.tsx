@@ -4,25 +4,37 @@ import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { useRouter } from "next/navigation";
 import { toLocalDatetimeString } from "utils/time";
-import { CreateEventFormValues, EventCover } from "types/Events";
+import {
+  CreateEventFormValues,
+  EventCover,
+  StoreEventDataType,
+} from "types/Events";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { FirebaseError } from "firebase/app";
 import { firestoreDB } from "lib/firebase";
-import { addDoc, collection, serverTimestamp, Timestamp } from "firebase/firestore";
+import {
+  addDoc,
+  collection,
+  serverTimestamp,
+  Timestamp,
+} from "firebase/firestore";
 import { DEFAULT_EVENT_CATEGORY } from "validations/common";
 import { CreateEventFormValidation } from "validations/events";
+import { useAppSelector } from "lib/store/hooks";
+import { selectAuth } from "lib/store/slices/authSlice";
+import { uploadEventCoverToCloudStorage } from "lib/firebase/cloudStorage";
 
 import toast from "react-hot-toast";
-import Header from "components/Header";
 import FilledButton from "components/FilledButton";
 import ProtectedRoute from "components/ProtectedRoute";
 import ImageFileSelect from "components/ImageFileSelect";
 import InputField from "components/FormControls/InputField";
 import SelectField from "components/FormControls/SelectField";
 import ToastSuccessMessage from "components/ToastSuccessMessage";
-import { uploadEventCoverToCloudStorage } from "lib/firebase/cloudStorage";
 
 const CreateEvent = () => {
+  const { currentUser } = useAppSelector(selectAuth);
+
   const nowWithTimeZone = toLocalDatetimeString(new Date());
   const nowPlus2HourWithTimeZone = toLocalDatetimeString(
     new Date(new Date().getTime() + 1 * 60 * 60 * 1000)
@@ -31,7 +43,7 @@ const CreateEvent = () => {
   const {
     handleSubmit,
     register,
-    formState: { errors, isSubmitting, isValid },
+    formState: { errors, isSubmitting },
   } = useForm<CreateEventFormValues>({
     resolver: zodResolver(CreateEventFormValidation),
     defaultValues: {
@@ -61,15 +73,16 @@ const CreateEvent = () => {
 
       // 2 - store event data in firestore
       const eventsCollectionRef = collection(firestoreDB, "events");
-      const data = {
+      const data: StoreEventDataType = {
         name: eventData.eventName,
         category: eventData.eventCategory,
         beginDate: Timestamp.fromDate(eventData.eventDate.begin as Date),
         endDate: Timestamp.fromDate(eventData.eventDate.end as Date),
         location: eventData.eventLocation,
-        imageCoverUrl: eventCoverUrl,
-        createdAt: serverTimestamp(),
-        updatedAt: serverTimestamp()
+        imageCoverUrl: eventCoverUrl || "",
+        createdBy: currentUser!.id,
+        createdAt: serverTimestamp() as Timestamp,
+        updatedAt: serverTimestamp() as Timestamp,
       };
       const eventCreated = await addDoc(eventsCollectionRef, data);
 
@@ -107,88 +120,84 @@ const CreateEvent = () => {
   };
 
   return (
-    <>
-      <Header />
+    <main className="my-8 max-w-2xl mx-auto w-full flex flex-col gap-y-3">
+      <h1 className="text-xl font-semibold">Créer un événement</h1>
 
-      <main className="my-8 max-w-2xl mx-auto w-full flex flex-col gap-y-3">
-        <h1 className="text-xl font-semibold">Créer un événement</h1>
+      <form
+        onSubmit={handleSubmit(createEvent)}
+        className="w-full flex flex-col gap-y-6"
+      >
+        <div className="flex flex-col gap-y-4 bg-white py-8 px-6 rounded-xl border border-gray-300">
+          <div className="flex gap-x-4">
+            <InputField
+              fieldName="eventName"
+              labelText="Nom"
+              placeholder="Ex : Concert Moïse Mbiye"
+              register={register}
+              isAutoFocus={true}
+              errorMessage={errors.eventName?.message}
+            />
 
-        <form
-          onSubmit={handleSubmit(createEvent)}
-          className="w-full flex flex-col gap-y-6"
-        >
-          <div className="flex flex-col gap-y-4 bg-white py-8 px-6 rounded-xl border border-slate-300">
-            <div className="flex gap-x-4">
-              <InputField
-                fieldName="eventName"
-                labelText="Nom"
-                placeholder="Ex : Concert Moïse Mbiye"
-                register={register}
-                isAutoFocus={true}
-                errorMessage={errors.eventName?.message}
-              />
+            <SelectField
+              fieldName="eventCategory"
+              labelText="Catégorie ou type"
+              register={register}
+              selectOptions={[...DEFAULT_EVENT_CATEGORY]}
+              errorMessage={errors.eventCategory?.message}
+            />
+          </div>
 
-              <SelectField
-                fieldName="eventCategory"
-                labelText="Catégorie ou type"
-                register={register}
-                selectOptions={DEFAULT_EVENT_CATEGORY}
-                errorMessage={errors.eventCategory?.message}
-              />
-            </div>
-
-            <div className="flex gap-x-4">
-              <InputField
-                inputType="datetime-local"
-                fieldName="eventDate.begin"
-                labelText="Début"
-                register={register}
-                errorMessage={errors.eventDate?.begin?.message}
-              />
-
-              <InputField
-                inputType="datetime-local"
-                fieldName="eventDate.end"
-                labelText="Fin"
-                register={register}
-                errorMessage={errors.eventDate?.end?.message}
-              />
-            </div>
+          <div className="flex gap-x-4">
+            <InputField
+              inputType="datetime-local"
+              fieldName="eventDate.begin"
+              labelText="Début"
+              register={register}
+              errorMessage={errors.eventDate?.begin?.message}
+            />
 
             <InputField
-              fieldName="eventLocation"
-              labelText="Localisation"
+              inputType="datetime-local"
+              fieldName="eventDate.end"
+              labelText="Fin"
               register={register}
-              placeholder="Ex : Avenue Des Huileries, Kinshasa"
-              errorMessage={errors.eventLocation?.message}
-            />
-
-            <ImageFileSelect
-              title="Image de couverture (falcultative)"
-              eventCoverPreview={eventCover.imagePreview}
-              setEventCover={setEventCover}
-              // max 5Mb
-              maxSizeInByte={1000 * 1000 * 5}
+              errorMessage={errors.eventDate?.end?.message}
             />
           </div>
 
-          {/* btn to cancel and to create an event */}
-          <div className="flex items-center justify-between">
-            <FilledButton
-              type="button"
-              variant="slate"
-              onClick={() => router.back()}
-            >
-              Annuler
-            </FilledButton>
+          <InputField
+            fieldName="eventLocation"
+            labelText="Localisation"
+            register={register}
+            placeholder="Ex : Avenue Des Huileries, Kinshasa"
+            errorMessage={errors.eventLocation?.message}
+          />
 
-            <FilledButton disabled={isSubmitting} isLoading={isSubmitting}>
-              Créer mon événment
-            </FilledButton>
-          </div>
-        </form>
-      </main>
-    </>
+          <ImageFileSelect
+            title="Image de couverture (falcultative)"
+            eventCoverPreview={eventCover.imagePreview}
+            setEventCover={setEventCover}
+            // max 5Mb
+            maxSizeInByte={1000 * 1000 * 5}
+          />
+        </div>
+
+        {/* btn to cancel and to create an event */}
+        <div className="flex items-center justify-between">
+          <FilledButton
+            type="button"
+            variant="slate"
+            onClick={() => router.back()}
+          >
+            Annuler
+          </FilledButton>
+
+          <FilledButton disabled={isSubmitting} isLoading={isSubmitting}>
+            Créer mon événment
+          </FilledButton>
+        </div>
+      </form>
+    </main>
   );
 };
 

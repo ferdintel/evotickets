@@ -13,7 +13,7 @@ const ToastSuccessMessage = ({ toastId, children }: ToastSuccessMessageProps) =>
 
       <button
         onClick={() => toast.dismiss(toastId)}
-        className="text-slate-400 hover:text-alternate duration-300"
+        className="text-gray-400 hover:text-alternate duration-300"
       >
         <IoIosCloseCircle size={30} />
       </button>

@@ -74,7 +74,7 @@ const InputField = <T extends Record<string, unknown>>({
           ${
             errorMessage
               ? "border-error"
-              : "border-slate-300 hover:border-slate-500"
+              : "border-gray-300 hover:border-gray-500"
           }
           focus:shadow-[0_0_0_1px_var(--alternate),0_0_0_3px_inset_var(--alternate-light)]
           focus:border-alternate duration-300 ${
@@ -92,7 +92,7 @@ const InputField = <T extends Record<string, unknown>>({
                   : "Masquer le mot de passe"
               }
               onClick={toggle}
-              className="absolute right-2 p-2 text-slate-500 hover:text-alternate duration-300 outline-alternate rounded-md"
+              className="absolute right-2 p-2 text-gray-500 hover:text-alternate duration-300 outline-alternate rounded-md"
             >
               {isPassword ? <LuEye size={20} /> : <LuEyeOff size={20} />}
             </button>

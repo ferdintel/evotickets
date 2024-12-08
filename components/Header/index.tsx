@@ -14,6 +14,7 @@ import { BiLoaderCircle } from "react-icons/bi";
 import { LuCalendarPlus } from "react-icons/lu";
 import { HiOutlineLogout } from "react-icons/hi";
 import { FaRegCircleUser } from "react-icons/fa6";
+import FilledButton from "components/FilledButton";
 
 const Header = () => {
   const [showDropdownMenu, setShowDropdownMenu] = useState(false);
@@ -25,6 +26,7 @@ const Header = () => {
   const dispatch = useAppDispatch();
 
   const logout = async () => {
+    hideUserDropdownMenu();
     try {
       dispatch(setPending(true));
       await signOut(firebaseAuth);
@@ -54,7 +56,10 @@ const Header = () => {
       <div className="flex items-center gap-x-4 text-white">
         {/* navlinks */}
         <nav className="flex items-center gap-x-4">
-          <Link href="/dashboard" className="hover:text-white/80 duration-300 text-nowrap">
+          <Link
+            href="/dashboard"
+            className="hover:text-white/80 duration-300 text-nowrap"
+          >
             Tableau de bord
           </Link>
 
@@ -80,58 +85,65 @@ const Header = () => {
         </nav>
 
         {/* user account */}
-        <div className="relative">
-          {/* current user */}
-          <button
-            title="Mon compte"
-            onClick={toggleUserDropdownMenu}
-            className="w-10 h-10 bg-alternate/90 rounded-[4px] font-medium hover:bg-alternate-light
-            focus:bg-alternate focus:shadow-[0px_0px_0px_4px_#ffffff1f] flex justify-center items-center
-            duration-300"
-          >
-            {pending ? (
-              <span className="animate-spin">
-                <BiLoaderCircle size={20} />
-              </span>
-            ) : (
-              currentUser?.firstName?.slice(0, 1)
-            )}
-          </button>
-
-          {/* profile and logout buttons */}
-          {showDropdownMenu && (
-            <div
-              className="absolute top-12 right-0 min-w-52 bg-white rounded-xl p-2 flex flex-col gap-y-1
-              shadow-[#00000029_0px_1px_4px,#06182c0d_0px_0px_0px_1px] z-10"
+        {currentUser ? (
+          <div className="relative">
+            {/* current user */}
+            <button
+              title="Mon compte"
+              disabled={pending}
+              onClick={toggleUserDropdownMenu}
+              className="w-10 h-10 bg-alternate/90 rounded-[4px] font-medium hover:bg-alternate-light
+              focus:bg-alternate focus:shadow-[0px_0px_0px_4px_#ffffff1f] flex justify-center items-center
+              duration-300"
             >
-              <Link
-                href="/profile"
-                className="flex items-center gap-x-2 p-3 rounded-lg font-medium text-foreground/85
-                hover:bg-alternate-light/40 hover:text-alternate active:bg-alternate-light duration-300"
-              >
-                <FaRegCircleUser size={20} />
-                Mon profil
-              </Link>
+              {pending ? (
+                <span className="animate-spin">
+                  <BiLoaderCircle size={20} />
+                </span>
+              ) : (
+                currentUser?.firstName?.slice(0, 1)
+              )}
+            </button>
 
-              <button
-                onClick={logout}
-                className="flex items-center gap-x-2 p-3 rounded-lg font-medium text-foreground/85
-                hover:bg-alternate-light/40 hover:text-alternate active:bg-alternate-light duration-300"
+            {/* profile and logout buttons */}
+            {showDropdownMenu && (
+              <div
+                className="absolute top-12 right-0 min-w-52 bg-white rounded-xl p-2 flex flex-col gap-y-1
+              shadow-[#00000029_0px_1px_4px,#06182c0d_0px_0px_0px_1px] z-10"
               >
-                <HiOutlineLogout size={20} />
-                Déconnexion
-              </button>
-            </div>
-          )}
+                <Link
+                  href="/profile"
+                  onClick={hideUserDropdownMenu}
+                  className="flex items-center gap-x-2 p-3 rounded-lg font-medium text-foreground/85
+                hover:bg-alternate-light/40 hover:text-alternate active:bg-alternate-light duration-300"
+                >
+                  <FaRegCircleUser size={20} />
+                  Mon profil
+                </Link>
 
-          {/* wrapper to hide the user dropdown menu when clicked */}
-          {showDropdownMenu && (
-            <div
-              onClick={hideUserDropdownMenu}
-              className="bg-transparent fixed top-0 left-0 w-screen h-screen z-[5]"
-            ></div>
-          )}
-        </div>
+                <button
+                  onClick={logout}
+                  className="flex items-center gap-x-2 p-3 rounded-lg font-medium text-foreground/85
+                hover:bg-alternate-light/40 hover:text-alternate active:bg-alternate-light duration-300"
+                >
+                  <HiOutlineLogout size={20} />
+                  Déconnexion
+                </button>
+              </div>
+            )}
+
+            {/* wrapper to hide the user dropdown menu when clicked */}
+            {showDropdownMenu && (
+              <div
+                onClick={hideUserDropdownMenu}
+                className="bg-transparent fixed top-0 left-0 w-screen h-screen z-[5]"
+              ></div>
+            )}
+          </div>
+        ) : (
+          // call to login
+          <FilledButton link="/login">Connexion</FilledButton>
+        )}
       </div>
     </header>
   );

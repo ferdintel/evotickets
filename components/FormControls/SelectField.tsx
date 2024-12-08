@@ -67,7 +67,7 @@ const SelectField = <T extends Record<string, unknown>>({
             ${
               errorMessage
                 ? "border-error"
-                : "border-slate-300 hover:border-slate-500"
+                : "border-gray-300 hover:border-gray-500"
             }
             focus:shadow-[0_0_0_1px_var(--alternate),0_0_0_3px_inset_var(--alternate-light)]
             focus:border-alternate duration-300 pr-12 ${addSelectStyles}`}
@@ -90,7 +90,7 @@ const SelectField = <T extends Record<string, unknown>>({
 
           {/* down arrow */}
           <span
-            className={`absolute right-2 text-slate-400 peer-hover:text-slate-500
+            className={`absolute right-2 text-gray-400 peer-hover:text-gray-500
             peer-focus:text-alternate peer-focus-within:rotate-180 duration-300 pointer-events-none`}
           >
             <LuChevronDown size={24} />

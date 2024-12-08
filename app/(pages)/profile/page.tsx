@@ -1,14 +1,12 @@
 "use client";
 
-import Header from "components/Header";
 import ProtectedRoute from "components/ProtectedRoute";
 
 const Profile = () => {
   return (
-    <div>
-      <Header />
+    <main>
       <h1>Profile</h1>
-    </div>
+    </main>
   );
 };
 
