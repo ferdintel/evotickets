@@ -1,7 +1,8 @@
 "use client";
 
 import EventCard from "components/EventCard";
-import ProtectedRoute from "components/ProtectedRoute";
+// import ProtectedRoute from "components/ProtectedRoute";
+import InputField from "components/FormControls/InputField";
 import FetchDataErrorDisplay from "components/FetchDataErrorDisplay";
 
 import useGetDocsFromFirestore from "hooks/useGetDocsFromFirestore";
@@ -9,6 +10,7 @@ import useGetDocsFromFirestore from "hooks/useGetDocsFromFirestore";
 import { BiLoaderCircle } from "react-icons/bi";
 import { LuCalendarMinus } from "react-icons/lu";
 import type { EventDataType } from "types/Events";
+import { useRef, useState } from "react";
 
 const EVENTS_COLLECTION_NAME = "events";
 
@@ -16,6 +18,24 @@ const Events = () => {
   const { docs, isLoading, error } = useGetDocsFromFirestore<EventDataType>(
     EVENTS_COLLECTION_NAME
   );
+
+  // search and sorting management
+  const [searchValue, setSearchValue] = useState("");
+  const inputSearchRef = useRef<HTMLInputElement>(null);
+  const handleInputSearchKeyDown = (
+    e: React.KeyboardEvent<HTMLInputElement>
+  ) => {
+    if (inputSearchRef.current) {
+      if (e.key === "Enter" || e.key === "NumpadEnter") {
+        setSearchValue(inputSearchRef.current.value);
+      }
+    }
+  };
+
+  // to reset filtering when input is empty
+  const handleInputSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (e.target.value === "") setSearchValue("");
+  };
 
   return (
     <main className="mb-8 flex flex-col gap-y-8">
@@ -33,8 +53,13 @@ const Events = () => {
         </div>
 
         {/* searchbar and sorting */}
-        <div>
-          <p>BARRE DE RECHERCHE ET TRIE</p>
+        <div className="flex items-center gap-x-3">
+          <InputField
+            ref={inputSearchRef}
+            placeholder="Rechercher un événement"
+            onKeyDown={handleInputSearchKeyDown}
+            onChange={handleInputSearchChange}
+          />
         </div>
       </div>
 
@@ -62,7 +87,9 @@ const Events = () => {
             />
           </span>
 
-          <p className="text-lg font-semibold">Vous n'avez aucun événement</p>
+          <p className="text-lg font-semibold">
+            Vous n&apos;avez aucun événement
+          </p>
           <p className="text-foreground/80 text-sm font-medium">
             La liste de vos événements sera affichée ici.
           </p>
@@ -70,13 +97,20 @@ const Events = () => {
       ) : (
         // event list is filled
         <ul className="grid grid-cols-3 gap-5">
-          {docs.map((data) => (
-            <EventCard key={data.id} eventData={data} />
-          ))}
+          {docs
+            .filter((currentEvent) =>
+              currentEvent.name
+                .toLocaleLowerCase()
+                .startsWith(searchValue.toLocaleLowerCase())
+            )
+            .map((data) => (
+              <EventCard key={data.id} eventData={data} />
+            ))}
         </ul>
       )}
     </main>
   );
 };
 
-export default ProtectedRoute(Events);
+export default Events;
+// export default ProtectedRoute(Events);

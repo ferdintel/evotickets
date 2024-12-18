@@ -12,8 +12,8 @@ import { MdLocationOn } from "react-icons/md";
 import { TbCalendarEvent } from "react-icons/tb";
 import { BiSolidCategoryAlt } from "react-icons/bi";
 
-import { DEFAULT_EVENT_CATEGORY } from "validations/common";
 import { currencyFormatter } from "utils/currency";
+import { DEFAULT_EVENT_CATEGORY } from "validations/common";
 
 const EventGlobalStats = () => {
   const { id: eventId } = useParams<{ id: string }>();
@@ -46,7 +46,7 @@ const EventGlobalStats = () => {
           />
 
           {/* event dates */}
-          <div className="flex items-center gap-x-4">
+          <div className="flex items-center gap-x-2">
             <span className="p-1 rounded-xl bg-gray-200 border border-gray-300">
               <TbCalendarEvent
                 size={20}
@@ -62,7 +62,7 @@ const EventGlobalStats = () => {
           </div>
 
           {/* event category */}
-          <p className="flex items-center gap-x-4">
+          <p className="flex items-center gap-x-2">
             <span className="p-1 rounded-xl bg-gray-200 border border-gray-300">
               <BiSolidCategoryAlt
                 size={20}
@@ -80,7 +80,7 @@ const EventGlobalStats = () => {
           </p>
 
           {/* event location */}
-          <p className="flex items-center gap-x-4">
+          <p className="flex items-center gap-x-2">
             <span className="p-1 rounded-xl bg-gray-200 border border-gray-300">
               <MdLocationOn size={20} className="min-w-5 text-foreground/80" />
             </span>
@@ -134,21 +134,21 @@ const EventGlobalStats = () => {
             <p className="flex items-center justify-between">
               <span className="text-foreground/80">Revenus encaissés</span>
               <span className="font-semibold">
-                {currencyFormatter.format(500)}
+                {currencyFormatter(500)}
               </span>
             </p>
 
             <p className="flex items-center justify-between">
               <span className="text-foreground/80">Revenus latents</span>
               <span className="font-semibold">
-                {currencyFormatter.format(425)}
+                {currencyFormatter(425)}
               </span>
             </p>
 
             <p className="flex items-center justify-between">
               <span className="text-foreground/80">Total attendu</span>
               <span className="font-semibold">
-                {currencyFormatter.format(925)}
+                {currencyFormatter(925)}
               </span>
             </p>
           </div>
@@ -192,5 +192,4 @@ const EventGlobalStats = () => {
   );
 };
 
-// export default ProtectedRoute(EventGlobalStats);
-export default EventGlobalStats;
+export default ProtectedRoute(EventGlobalStats);

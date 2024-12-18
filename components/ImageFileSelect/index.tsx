@@ -2,6 +2,7 @@
 
 import Image from "next/image";
 import toast from "react-hot-toast";
+
 import { useRef, useState } from "react";
 import { EventCover } from "types/Events";
 import { RiCloseFill, RiUploadCloud2Fill } from "react-icons/ri";
@@ -28,9 +29,18 @@ const ImageFileSelect = ({
 
   const updateImageState = (file: File | null) => {
     if (file) {
+      // check file type
+      if (!file.type.startsWith("image/")) {
+        toast.error(`Le fichier sélectionné n'est pas une image.`);
+      }
       // check image max size
-      if (maxSizeInByte && file.size > maxSizeInByte) {
-        toast.error(`L'image sélectionnée est trop grande.`);
+      else if (maxSizeInByte && file.size > maxSizeInByte) {
+        toast.error(
+          `L'image sélectionnée est trop grande (${(
+            file.size /
+            (1024 * 1024)
+          ).toFixed(2)}Mo, max autorisé: ${maxSizeInByte / (1024 * 1024)}Mo).`
+        );
       } else {
         const previewUrl = URL.createObjectURL(file);
         setEventCover({
@@ -110,7 +120,7 @@ const ImageFileSelect = ({
               width={200}
               height={200}
               src={eventCoverPreview}
-              alt="Uploaded Image"
+              alt="Uploaded image"
               className={`w-full h-full object-cover ${imageAddStyles}`}
             />
 

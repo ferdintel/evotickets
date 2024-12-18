@@ -4,7 +4,6 @@ export const REQUIRED_FIELD_MESSAGE = "Champ requis";
 // for event creation
 export const DEFAULT_EVENT_CATEGORY = [
   { text: "Autre", value: "autre" },
-  { text: "Atelier", value: "atelier" },
   { text: "Business", value: "business" },
   { text: "Concert", value: "concert" },
   { text: "Conférence", value: "conference" },

@@ -1,10 +1,10 @@
 "use client";
 
-import { doc, getDoc } from "firebase/firestore";
 import { useEffect } from "react";
 import { useDispatch } from "react-redux";
-import { firebaseAuth, firestoreDB } from "lib/firebase";
+import { doc, getDoc } from "firebase/firestore";
 import { onAuthStateChanged } from "firebase/auth";
+import { firebaseAuth, firestoreDB } from "lib/firebase";
 import { setUser, removeUser } from "lib/store/slices/authSlice";
 
 const AuthProvider = ({ children }: { children: React.ReactNode }) => {
@@ -38,7 +38,7 @@ const AuthProvider = ({ children }: { children: React.ReactNode }) => {
             dispatch(setUser(userSerialized));
           }
         } catch (err) {
-          dispatch(removeUser());
+          if (err) dispatch(removeUser());
         }
       } else {
         dispatch(removeUser());

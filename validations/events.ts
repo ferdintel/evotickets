@@ -1,5 +1,5 @@
 import { z, ZodType } from "zod";
-import { CreateEventFormValues, EventCategory } from "types/Events";
+import { CreateEventFormValues } from "types/Events";
 import { defaultEventCategoryValues } from "./common";
 
 export const CreateEventFormValidation: ZodType<CreateEventFormValues> =

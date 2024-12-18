@@ -4,20 +4,24 @@ import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { useRouter } from "next/navigation";
 import { toLocalDatetimeString } from "utils/time";
+
 import {
   CreateEventFormValues,
   EventCover,
   StoreEventDataType,
 } from "types/Events";
+
 import { zodResolver } from "@hookform/resolvers/zod";
 import { FirebaseError } from "firebase/app";
 import { firestoreDB } from "lib/firebase";
+
 import {
   addDoc,
   collection,
   serverTimestamp,
   Timestamp,
 } from "firebase/firestore";
+
 import { DEFAULT_EVENT_CATEGORY } from "validations/common";
 import { CreateEventFormValidation } from "validations/events";
 import { useAppSelector } from "lib/store/hooks";
@@ -48,7 +52,7 @@ const CreateEvent = () => {
     resolver: zodResolver(CreateEventFormValidation),
     defaultValues: {
       eventName: "",
-      eventCategory: "",
+      eventCategory: "autre",
       eventDate: {
         begin: nowWithTimeZone,
         end: nowPlus2HourWithTimeZone,
@@ -134,7 +138,6 @@ const CreateEvent = () => {
               labelText="Nom"
               placeholder="Ex : Concert Moïse Mbiye"
               register={register}
-              isAutoFocus={true}
               errorMessage={errors.eventName?.message}
             />
 
@@ -178,7 +181,7 @@ const CreateEvent = () => {
             eventCoverPreview={eventCover.imagePreview}
             setEventCover={setEventCover}
             // max 5Mb
-            maxSizeInByte={1000 * 1000 * 5}
+            maxSizeInByte={1024 * 1024 * 5}
           />
         </div>
 
@@ -192,7 +195,7 @@ const CreateEvent = () => {
             Annuler
           </FilledButton>
 
-          <FilledButton disabled={isSubmitting} isLoading={isSubmitting}>
+          <FilledButton type="submit" disabled={isSubmitting} isLoading={isSubmitting}>
             Créer mon événment
           </FilledButton>
         </div>

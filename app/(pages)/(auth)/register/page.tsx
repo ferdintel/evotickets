@@ -106,7 +106,6 @@ const Register = () => {
           register={register}
           placeholder="Adresse email"
           autoComplete="email"
-          isAutoFocus={true}
           errorMessage={errors.email?.message}
         />
 

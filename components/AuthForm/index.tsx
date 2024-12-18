@@ -29,7 +29,7 @@ const AuthForm = ({
   const toggleIsTermsAccepted = () =>
     setIsTermsAccepted((prevState) => !prevState);
 
-  // to redirect user to dashboard if is authenticated
+  // to redirect user to dashboard if is already signed in
   const router = useRouter();
   const auth = useAppSelector(selectAuth);
   useEffect(() => {

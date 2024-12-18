@@ -17,9 +17,9 @@ const eventTabs = [
 ];
 
 const EventHeader = () => {
-  const currentEvent = useAppSelector(selectCurrentEvent);
   const { id: eventId } = useParams<{ id: string }>();
   const pathName = usePathname();
+  const currentEvent = useAppSelector(selectCurrentEvent);
 
   return (
     <div

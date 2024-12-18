@@ -2,19 +2,18 @@
 
 import Link from "next/link";
 import Image from "next/image";
+import FilledButton from "components/FilledButton";
 
 import { useState } from "react";
-
 import { signOut } from "firebase/auth";
 import { firebaseAuth } from "lib/firebase";
 import { useAppDispatch, useAppSelector } from "lib/store/hooks";
-import { removeUser, selectAuth, setPending } from "lib/store/slices/authSlice";
+import { removeUser, selectAuth } from "lib/store/slices/authSlice";
 
 import { BiLoaderCircle } from "react-icons/bi";
 import { LuCalendarPlus } from "react-icons/lu";
 import { HiOutlineLogout } from "react-icons/hi";
 import { FaRegCircleUser } from "react-icons/fa6";
-import FilledButton from "components/FilledButton";
 
 const Header = () => {
   const [showDropdownMenu, setShowDropdownMenu] = useState(false);
@@ -28,7 +27,6 @@ const Header = () => {
   const logout = async () => {
     hideUserDropdownMenu();
     try {
-      dispatch(setPending(true));
       await signOut(firebaseAuth);
     } catch (err) {
       dispatch(removeUser());

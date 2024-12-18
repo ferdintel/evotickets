@@ -18,6 +18,7 @@ type SelectFieldProps<T extends FieldValues> = {
   register: UseFormRegister<T>;
   registerOptions?: RegisterOptions<T, Path<T>>;
   labelText?: string;
+  placeholder?: string;
   addLabelStyles?: string;
   addSelectStyles?: string;
   addLabelTextStyles?: string;
@@ -32,6 +33,7 @@ const SelectField = <T extends Record<string, unknown>>({
   register,
   registerOptions,
   labelText = "",
+  placeholder = "",
   addLabelStyles = "",
   addSelectStyles = "",
   addLabelTextStyles = "",
@@ -78,7 +80,7 @@ const SelectField = <T extends Record<string, unknown>>({
               disabled
               className="font-medium text-gray-400"
             >
-              Sélectionnez une option
+              {placeholder || "Sélectionnez une option"}
             </option>
 
             {selectOptions.map((selectOption) => (

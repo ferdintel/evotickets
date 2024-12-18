@@ -22,8 +22,8 @@ const ProtectedRoute = (WrappedComponent: React.ComponentType<any>) => {
       return <PageLoader />;
     }
 
-    if (auth.currentUser !== null) return <WrappedComponent {...props} />
-    else return <PageLoader />; 
+    if (auth.currentUser !== null) return <WrappedComponent {...props} />;
+    else return <PageLoader />;
   };
 };
 
