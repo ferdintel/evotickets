@@ -20,7 +20,7 @@ export default function RootLayout({
   return (
     <html lang="fr" className={`${inter.variable} antialiased`}>
       <body
-        className={`px-4 mobileM:px-5 min-h-screen flex flex-col bg-gray-100 text-foreground font-inter`}
+        className={`px-4 mobileM:px-5 min-h-screen flex flex-col bg-background text-foreground font-inter`}
       >
         <StoreProvider>
           <Toaster />

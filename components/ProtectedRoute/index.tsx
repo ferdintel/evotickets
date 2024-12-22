@@ -7,24 +7,29 @@ import { selectAuth } from "lib/store/slices/authSlice";
 
 import PageLoader from "components/PageLoader";
 
-const ProtectedRoute = (WrappedComponent: React.ComponentType<any>) => {
-  return (props: any) => {
-    const auth = useAppSelector(selectAuth);
+const ProtectedRoute = <P extends object>(
+  WrappedComponent: React.ComponentType<P>
+) => {
+  const WithProtection = (props: P) => {
+    const { pending, currentUser } = useAppSelector(selectAuth);
     const router = useRouter();
 
     useEffect(() => {
-      if (!auth.pending && auth.currentUser === null) {
+      if (!pending && !currentUser) {
         router.push("/login");
       }
-    }, [auth]);
+    }, [pending, currentUser, router]);
 
-    if (auth.pending) {
-      return <PageLoader />;
-    }
+    if (pending || !currentUser) return <PageLoader />;
 
-    if (auth.currentUser !== null) return <WrappedComponent {...props} />;
-    else return <PageLoader />;
+    return <WrappedComponent {...props} />;
   };
+
+  WithProtection.displayName = `ProtectedRoute(${
+    WrappedComponent.displayName || WrappedComponent.name || "Component"
+  })`;
+
+  return WithProtection;
 };
 
 export default ProtectedRoute;

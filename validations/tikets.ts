@@ -11,7 +11,7 @@ export const GenerateTicketsFormValidation: ZodType<GenerateTicketsFormValues> =
       .min(1, "Précisez une catégorie (Normal, VIP, etc.)"),
 
     ticketPrice: z.object({
-      value: z.coerce.number().min(1, "Ne peut pas être égal à 0"),
+      value: z.coerce.number().min(1, "Le prix commence par 1"),
 
       currency: z.enum(
         Object.values(DefaultCurrencies) as [

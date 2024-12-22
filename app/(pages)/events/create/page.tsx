@@ -71,7 +71,7 @@ const CreateEvent = () => {
   const createEvent = async (eventData: CreateEventFormValues) => {
     try {
       // 1 - upload event cover in cloud storage if is provided
-      let eventCoverUrl = eventCover.imagePreview
+      const eventCoverUrl = eventCover.imagePreview
         ? await uploadEventCoverToCloudStorage(eventCover.imageFile as File)
         : null;
 
@@ -84,7 +84,7 @@ const CreateEvent = () => {
         endDate: Timestamp.fromDate(eventData.eventDate.end as Date),
         location: eventData.eventLocation,
         imageCoverUrl: eventCoverUrl || "",
-        createdBy: currentUser!.id,
+        createdBy: currentUser!.uid,
         createdAt: serverTimestamp() as Timestamp,
         updatedAt: serverTimestamp() as Timestamp,
       };
@@ -100,7 +100,7 @@ const CreateEvent = () => {
           (t) => (
             <ToastSuccessMessage toastId={t.id}>
               <p>
-                Bravo ! L'événement{" "}
+                Bravo ! L&apos;événement{" "}
                 <span
                   className="font-semibold bg-gradient-to-bl from-accent via-alternate
                   to-accent bg-clip-text text-transparent leading-normal"

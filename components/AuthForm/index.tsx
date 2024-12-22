@@ -31,16 +31,16 @@ const AuthForm = ({
 
   // to redirect user to dashboard if is already signed in
   const router = useRouter();
-  const auth = useAppSelector(selectAuth);
+  const { pending, currentUser } = useAppSelector(selectAuth);
   useEffect(() => {
-    if (!auth.pending && auth.currentUser) router.push("/dashboard");
-  }, [auth]);
+    if (!pending && currentUser) router.push("/dashboard");
+  }, [currentUser, pending, router]);
 
-  if (auth.pending) return <PageLoader />;
+  if (pending) return <PageLoader />;
 
-  if (auth.currentUser === null)
+  if (currentUser === null)
     return (
-      <div className="min-h-screen py-8 flex justify-center items-center">
+      <div className="grow py-8 flex justify-center items-center">
         <div
           className="max-w-[380px] w-full bg-white flex flex-col justify-center items-center px-6 py-6
           rounded-xl shadow"
@@ -126,7 +126,6 @@ const AuthForm = ({
         </div>
       </div>
     );
-  else return <PageLoader />;
 };
 
 export default AuthForm;

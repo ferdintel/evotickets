@@ -7,6 +7,7 @@ import { setCurrentEvent } from "lib/store/slices/currentEventSlice";
 
 import { MdLocationOn } from "react-icons/md";
 import { TbCalendarEvent } from "react-icons/tb";
+import { FaRegCircleUser } from "react-icons/fa6";
 import { BiSolidCategoryAlt } from "react-icons/bi";
 
 import { DEFAULT_EVENT_CATEGORY } from "validations/common";
@@ -34,7 +35,7 @@ const EventCard = ({ eventData }: EventCardProps) => {
     <li>
       <Link
         href={`events/${eventData.id}`}
-        onClick={() =>setCurrentEventData()}
+        onClick={() => setCurrentEventData()}
         className="w-full flex items-center gap-x-4 p-4 rounded-lg bg-white group
         shadow hover:shadow-[5px_5px_var(--alternate-light)] duration-300"
       >
@@ -48,7 +49,7 @@ const EventCard = ({ eventData }: EventCardProps) => {
               "/images/events/placeholder-image-300x225.png"
             }
             alt={eventData.name}
-            className="min-w-32 w-full h-24 object-cover group-hover:scale-125 duration-300"
+            className="min-w-32 w-full h-32 object-cover group-hover:scale-125 duration-300"
           />
         </div>
 
@@ -90,6 +91,11 @@ const EventCard = ({ eventData }: EventCardProps) => {
             <p className="flex items-center gap-x-1">
               <MdLocationOn size={16} className="min-w-4 text-foreground/80" />
               <span className="truncate">{eventData.location}</span>
+            </p>
+
+            <p className="flex items-center gap-x-1">
+              <FaRegCircleUser size={16} />
+              <span className="truncate">Role: Manager</span>
             </p>
           </div>
         </div>

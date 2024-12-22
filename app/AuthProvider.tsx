@@ -13,21 +13,15 @@ const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   useEffect(() => {
     // monitoring user authentication
     const unsubscribe = onAuthStateChanged(firebaseAuth, async (user) => {
-      // debug
-      console.log("!! ON A ÉTÉ DANS onAuthStateChanged !!");
-
       if (user) {
         // get user infos
         try {
           const userRef = doc(firestoreDB, "users", user.uid);
           const userInfos = await getDoc(userRef);
 
-          // debug
-          console.log("!!ON VIENT DE LIRE DANS USERS !!");
-
           if (userInfos.exists()) {
             const userSerialized = {
-              id: user.uid,
+              uid: user.uid,
               email: user.email,
               firstName: userInfos.data().firstName,
               lastName: userInfos.data().lastName,

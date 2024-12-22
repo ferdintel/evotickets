@@ -13,10 +13,11 @@ type SelectOption = {
 };
 
 type SelectFieldProps<T extends FieldValues> = {
-  fieldName: Path<T>;
+  fieldName?: Path<T>;
   selectOptions: SelectOption[];
-  register: UseFormRegister<T>;
+  register?: UseFormRegister<T>;
   registerOptions?: RegisterOptions<T, Path<T>>;
+  onChange?: (e: React.ChangeEvent<HTMLSelectElement>) => void;
   labelText?: string;
   placeholder?: string;
   addLabelStyles?: string;
@@ -32,6 +33,7 @@ const SelectField = <T extends Record<string, unknown>>({
   selectOptions,
   register,
   registerOptions,
+  onChange,
   labelText = "",
   placeholder = "",
   addLabelStyles = "",
@@ -42,6 +44,11 @@ const SelectField = <T extends Record<string, unknown>>({
   isRequired = false,
   errorMessage = "",
 }: SelectFieldProps<T>) => {
+  const selectClassName = `w-full px-4 py-3 placeholder:font-medium rounded-lg outline-none border peer ${
+    errorMessage ? "border-error" : "border-gray-300 hover:border-gray-500"
+  } focus:shadow-[0_0_0_1px_var(--alternate),0_0_0_3px_inset_var(--alternate-light)]
+  focus:border-alternate duration-300 pr-12 ${addSelectStyles}`;
+
   return (
     <div className={`w-full flex flex-col gap-y-1 ${addParentWrapperStyles}`}>
       <label
@@ -59,36 +66,55 @@ const SelectField = <T extends Record<string, unknown>>({
         )}
 
         {/* select and down arrow */}
-        <div className="flex items-center">
-          <select
-            {...register(fieldName, registerOptions)}
-            name={fieldName}
-            autoFocus={isAutoFocus}
-            required={isRequired}
-            className={`w-full px-4 py-3 placeholder:font-medium rounded-lg outline-none border peer
-            ${
-              errorMessage
-                ? "border-error"
-                : "border-gray-300 hover:border-gray-500"
-            }
-            focus:shadow-[0_0_0_1px_var(--alternate),0_0_0_3px_inset_var(--alternate-light)]
-            focus:border-alternate duration-300 pr-12 ${addSelectStyles}`}
-          >
-            <option
-              value=""
-              defaultValue=""
-              disabled
-              className="font-medium text-gray-400"
+        <div className="relative flex items-center">
+          {/* select work with react-hook-form */}
+          {register && fieldName ? (
+            <select
+              {...register(fieldName, registerOptions)}
+              name={fieldName}
+              autoFocus={isAutoFocus}
+              required={isRequired}
+              className={selectClassName}
             >
-              {placeholder || "Sélectionnez une option"}
-            </option>
-
-            {selectOptions.map((selectOption) => (
-              <option key={selectOption.value} value={selectOption.value}>
-                {selectOption.text}
+              <option
+                value=""
+                defaultValue=""
+                disabled
+                className="font-medium text-gray-400"
+              >
+                {placeholder || "Sélectionnez une option"}
               </option>
-            ))}
-          </select>
+
+              {selectOptions.map((selectOption) => (
+                <option key={selectOption.value} value={selectOption.value}>
+                  {selectOption.text}
+                </option>
+              ))}
+            </select>
+          ) : (
+            <select
+              name={fieldName}
+              autoFocus={isAutoFocus}
+              required={isRequired}
+              className={selectClassName}
+              onChange={onChange}
+            >
+              <option
+                value=""
+                defaultValue=""
+                disabled
+                className="font-medium text-gray-400"
+              >
+                {placeholder || "Sélectionnez une option"}
+              </option>
+
+              {selectOptions.map((selectOption) => (
+                <option key={selectOption.value} value={selectOption.value}>
+                  {selectOption.text}
+                </option>
+              ))}
+            </select>
+          )}
 
           {/* down arrow */}
           <span

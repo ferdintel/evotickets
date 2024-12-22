@@ -29,7 +29,7 @@ const Header = () => {
     try {
       await signOut(firebaseAuth);
     } catch (err) {
-      dispatch(removeUser());
+      if (err) dispatch(removeUser());
     }
   };
 
@@ -51,7 +51,7 @@ const Header = () => {
       </Link>
 
       {/* right content */}
-      <div className="flex items-center gap-x-4 text-white">
+      <div className="flex items-center gap-x-4 text-[#f8f4ff]">
         {/* navlinks */}
         <nav className="flex items-center gap-x-4">
           <Link
@@ -139,7 +139,7 @@ const Header = () => {
             )}
           </div>
         ) : (
-          // call to login
+          // btn to login
           <FilledButton link="/login">Connexion</FilledButton>
         )}
       </div>

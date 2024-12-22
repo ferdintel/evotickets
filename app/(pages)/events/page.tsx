@@ -1,16 +1,15 @@
 "use client";
 
 import EventCard from "components/EventCard";
-// import ProtectedRoute from "components/ProtectedRoute";
+import ProtectedRoute from "components/ProtectedRoute";
 import InputField from "components/FormControls/InputField";
+import useGetDocsFromFirestore from "hooks/useGetDocsFromFirestore";
 import FetchDataErrorDisplay from "components/FetchDataErrorDisplay";
 
-import useGetDocsFromFirestore from "hooks/useGetDocsFromFirestore";
-
+import { useState } from "react";
 import { BiLoaderCircle } from "react-icons/bi";
 import { LuCalendarMinus } from "react-icons/lu";
 import type { EventDataType } from "types/Events";
-import { useRef, useState } from "react";
 
 const EVENTS_COLLECTION_NAME = "events";
 
@@ -21,14 +20,11 @@ const Events = () => {
 
   // search and sorting management
   const [searchValue, setSearchValue] = useState("");
-  const inputSearchRef = useRef<HTMLInputElement>(null);
   const handleInputSearchKeyDown = (
     e: React.KeyboardEvent<HTMLInputElement>
   ) => {
-    if (inputSearchRef.current) {
-      if (e.key === "Enter" || e.key === "NumpadEnter") {
-        setSearchValue(inputSearchRef.current.value);
-      }
+    if (e.key === "Enter" || e.key === "NumpadEnter") {
+      setSearchValue(e.currentTarget.value);
     }
   };
 
@@ -55,7 +51,6 @@ const Events = () => {
         {/* searchbar and sorting */}
         <div className="flex items-center gap-x-3">
           <InputField
-            ref={inputSearchRef}
             placeholder="Rechercher un événement"
             onKeyDown={handleInputSearchKeyDown}
             onChange={handleInputSearchChange}
@@ -112,5 +107,4 @@ const Events = () => {
   );
 };
 
-export default Events;
-// export default ProtectedRoute(Events);
+export default ProtectedRoute(Events);
