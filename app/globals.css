@@ -1,0 +1,43 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --background: #f9f9f0;
+  --foreground: #28282B;
+  --dark: #20073b;
+  --accent: #f90e80;
+  --alternate: #8f3996;
+  --alternate-light: #d19fd599;
+  --error: #ff0033;
+  --error-light: #d4496766;
+}
+
+/* remove eye on input:password */
+input[type="password"]::-ms-reveal,
+input[type="password"]::-ms-clear {
+  display: none;
+}
+
+/* remove drop down arrow from select */
+select {
+  -moz-appearance: none;
+  -webkit-appearance: none;
+}
+select::-ms-expand {
+  display: none;
+}
+
+/* change calendar icon on input:date */
+:is(
+    input[type="date"],
+    input[type="datetime-local"]
+  )::-webkit-calendar-picker-indicator {
+  display: block;
+  width: 20px;
+  height: 20px;
+  opacity: 1;
+  background: url("data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9IiM2NDc0OGIiIHN0cm9rZS13aWR0aD0iMiIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIiBzdHJva2UtbGluZWpvaW49InJvdW5kIiBjbGFzcz0ibHVjaWRlIGx1Y2lkZS1jYWxlbmRhci1yYW5nZSI+PHJlY3Qgd2lkdGg9IjE4IiBoZWlnaHQ9IjE4IiB4PSIzIiB5PSI0IiByeD0iMiIvPjxwYXRoIGQ9Ik0xNiAydjQiLz48cGF0aCBkPSJNMyAxMGgxOCIvPjxwYXRoIGQ9Ik04IDJ2NCIvPjxwYXRoIGQ9Ik0xNyAxNGgtNiIvPjxwYXRoIGQ9Ik0xMyAxOEg3Ii8+PHBhdGggZD0iTTcgMTRoLjAxIi8+PHBhdGggZD0iTTE3IDE4aC4wMSIvPjwvc3ZnPg==")
+    no-repeat;
+  cursor: pointer;
+}
