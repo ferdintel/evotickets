@@ -1,5 +1,6 @@
 export interface User {
   uid: string;
+  isAdmin: boolean;
   email: string | null;
   firstName: string | null;
   lastName: string | null;

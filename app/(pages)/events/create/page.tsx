@@ -13,7 +13,7 @@ import {
 
 import { zodResolver } from "@hookform/resolvers/zod";
 import { FirebaseError } from "firebase/app";
-import { firestoreDB } from "lib/firebase";
+import { firebaseDB } from "lib/firebase/client";
 
 import {
   addDoc,
@@ -76,7 +76,7 @@ const CreateEvent = () => {
         : null;
 
       // 2 - store event data in firestore
-      const eventsCollectionRef = collection(firestoreDB, "events");
+      const eventsCollectionRef = collection(firebaseDB, "events");
       const data: StoreEventDataType = {
         name: eventData.eventName,
         category: eventData.eventCategory,
@@ -85,6 +85,8 @@ const CreateEvent = () => {
         location: eventData.eventLocation,
         imageCoverUrl: eventCoverUrl || "",
         createdBy: currentUser!.uid,
+        managerId: null,
+        members: {},
         createdAt: serverTimestamp() as Timestamp,
         updatedAt: serverTimestamp() as Timestamp,
       };

@@ -7,7 +7,7 @@ import { RegisterFormValidation } from "validations/authForm";
 
 import { FirebaseError } from "firebase/app";
 import { doc, setDoc } from "firebase/firestore";
-import { firebaseAuth, firestoreDB } from "lib/firebase";
+import { firebaseAuth, firebaseDB } from "lib/firebase/client";
 import { createUserWithEmailAndPassword } from "firebase/auth";
 
 import toast from "react-hot-toast";
@@ -62,7 +62,7 @@ const Register = () => {
       );
 
       // add user infos for registered user to 'users' collection
-      const docRef = doc(firestoreDB, "users", userCredential.user.uid);
+      const docRef = doc(firebaseDB, "users", userCredential.user.uid);
       const data = { firstName, lastName };
       await setDoc(docRef, data);
 

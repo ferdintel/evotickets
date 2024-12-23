@@ -19,6 +19,9 @@ const EventGlobalStats = () => {
   const { id: eventId } = useParams<{ id: string }>();
   const currentEvent = useAppSelector(selectCurrentEvent);
 
+  // set a manager
+  const setManager = () => {};
+
   return (
     <div className="grid grid-cols-3 gap-5">
       {/* 1 - infos about event itself */}
@@ -133,23 +136,17 @@ const EventGlobalStats = () => {
           <div className="flex flex-col gap-y-2">
             <p className="flex items-center justify-between">
               <span className="text-foreground/80">Revenus encaissés</span>
-              <span className="font-semibold">
-                {currencyFormatter(500)}
-              </span>
+              <span className="font-semibold">{currencyFormatter(500)}</span>
             </p>
 
             <p className="flex items-center justify-between">
               <span className="text-foreground/80">Revenus latents</span>
-              <span className="font-semibold">
-                {currencyFormatter(425)}
-              </span>
+              <span className="font-semibold">{currencyFormatter(425)}</span>
             </p>
 
             <p className="flex items-center justify-between">
               <span className="text-foreground/80">Total attendu</span>
-              <span className="font-semibold">
-                {currencyFormatter(925)}
-              </span>
+              <span className="font-semibold">{currencyFormatter(925)}</span>
             </p>
           </div>
         </div>
@@ -174,17 +171,35 @@ const EventGlobalStats = () => {
         <div className="flex flex-col gap-y-3">
           <p className="flex items-center justify-between">
             <span className="text-foreground/80">Manager</span>
-            <span className="font-semibold">Gray Mafutala</span>
+            {currentEvent?.managerId ? (
+              <span className="font-semibold">Gray Mafutala</span>
+            ) : (
+              <FilledButton size="small" variant="slate" onClick={setManager}>
+                Définir un manager
+              </FilledButton>
+            )}
           </p>
 
           <p className="flex items-center justify-between">
             <span className="text-foreground/80">Vendeurs</span>
-            <span className="font-semibold">100</span>
+            <span className="font-semibold">
+              {
+                Object.values(currentEvent?.members || {}).filter(
+                  (member) => member.role === "seller"
+                ).length
+              }
+            </span>
           </p>
-          
+
           <p className="flex items-center justify-between">
             <span className="text-foreground/80">Contrôleurs</span>
-            <span className="font-semibold">100</span>
+            <span className="font-semibold">
+              {
+                Object.values(currentEvent?.members || {}).filter(
+                  (member) => member.role === "controller"
+                ).length
+              }
+            </span>
           </p>
         </div>
       </div>

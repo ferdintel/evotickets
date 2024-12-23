@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 
-import { firestoreDB } from "lib/firebase";
+import { firebaseDB } from "lib/firebase/client";
 import { getDocs, collection } from "firebase/firestore";
 
 const useGetDocsFromFirestore = <T>(collectionName: string) => {
@@ -11,7 +11,7 @@ const useGetDocsFromFirestore = <T>(collectionName: string) => {
   useEffect(() => {
     // check if online or not
     if (navigator.onLine) {
-      const docsRef = collection(firestoreDB, collectionName);
+      const docsRef = collection(firebaseDB, collectionName);
 
       getDocs(docsRef)
         .then((snapshot) => {

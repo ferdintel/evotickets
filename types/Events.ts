@@ -27,6 +27,8 @@ export type StoreEventDataType = {
   location: string;
   imageCoverUrl: string;
   createdBy: string;
+  managerId: string | null;
+  members: { [key: string]: { role: string; assignedTicketQty: number } };
   createdAt: Timestamp;
   updatedAt: Timestamp;
 };
@@ -46,6 +48,8 @@ export type CurrentEventDataSerialized = {
   location: string;
   imageCoverUrl: string;
   createdBy: string;
+  managerId: string | null;
+  members: { [key: string]: { role: string; assignedTicketQty: number } };
   createdAt: string;
   updatedAt: string;
 };

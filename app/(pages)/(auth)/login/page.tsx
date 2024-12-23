@@ -6,7 +6,7 @@ import { LoginFormValues } from "types/Auth";
 import { LoginFormValidation } from "validations/authForm";
 
 import { FirebaseError } from "firebase/app";
-import { firebaseAuth } from "lib/firebase";
+import { firebaseAuth } from "lib/firebase/client";
 import { signInWithEmailAndPassword } from "firebase/auth";
 
 import toast from "react-hot-toast";

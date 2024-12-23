@@ -1,5 +1,5 @@
 import toast from "react-hot-toast";
-import { firebaseStorage } from ".";
+import { firebaseStorage } from "./client";
 import { FirebaseError } from "firebase/app";
 import { getDownloadURL, ref, uploadBytes } from "firebase/storage";
 

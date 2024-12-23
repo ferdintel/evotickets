@@ -8,6 +8,7 @@ import { useParams, usePathname } from "next/navigation";
 
 import { PiUsersThree } from "react-icons/pi";
 import { TbHomeStats, TbLineScan, TbTicket } from "react-icons/tb";
+import { selectAuth } from "lib/store/slices/authSlice";
 
 const eventTabs = [
   { title: "Global", link: "/", icon: <TbHomeStats size={20} /> },
@@ -18,8 +19,18 @@ const eventTabs = [
 
 const EventHeader = () => {
   const { id: eventId } = useParams<{ id: string }>();
-  const pathName = usePathname();
+  const pathName = usePathname() as string;
+
+  const { currentUser } = useAppSelector(selectAuth);
   const currentEvent = useAppSelector(selectCurrentEvent);
+
+  const eventUserRole = currentUser?.isAdmin
+    ? "administrateur"
+    : currentEvent?.managerId === currentUser?.uid
+    ? "manager"
+    : currentEvent?.members[currentUser!.uid]?.role === "seller"
+    ? "vendeur"
+    : "contrôleur";
 
   return (
     <div
@@ -35,7 +46,7 @@ const EventHeader = () => {
           {currentEvent?.name}
         </h1>
         <p className="text-foreground/80 text-sm font-medium">
-          Vous êtes un admin/manager/vendeur/controlleur pour cet événement
+          Vous êtes un {eventUserRole} pour cet événement
         </p>
       </div>
 

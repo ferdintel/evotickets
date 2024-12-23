@@ -6,7 +6,7 @@ import FilledButton from "components/FilledButton";
 
 import { useState } from "react";
 import { signOut } from "firebase/auth";
-import { firebaseAuth } from "lib/firebase";
+import { firebaseAuth } from "lib/firebase/client";
 import { useAppDispatch, useAppSelector } from "lib/store/hooks";
 import { removeUser, selectAuth } from "lib/store/slices/authSlice";
 
@@ -72,14 +72,17 @@ const Header = () => {
             Invitations
           </Link>
 
-          <Link
-            href="/events/create"
-            title="Créer un événement"
-            className="p-2 rounded-[4px] hover:bg-alternate-light focus:bg-alternate-light focus:shadow-[0px_0px_0px_4px_#ffffff1f]
+          {/* display for only admin */}
+          {currentUser?.isAdmin && (
+            <Link
+              href="/events/create"
+              title="Créer un événement"
+              className="p-2 rounded-[4px] hover:bg-alternate-light focus:bg-alternate-light focus:shadow-[0px_0px_0px_4px_#ffffff1f]
             duration-300"
-          >
-            <LuCalendarPlus size={24} />
-          </Link>
+            >
+              <LuCalendarPlus size={24} />
+            </Link>
+          )}
         </nav>
 
         {/* user account */}
@@ -107,7 +110,7 @@ const Header = () => {
             {showDropdownMenu && (
               <div
                 className="absolute top-12 right-0 min-w-52 bg-white rounded-xl p-2 flex flex-col gap-y-1
-              shadow-[#00000029_0px_1px_4px,#06182c0d_0px_0px_0px_1px] z-10"
+                shadow-[#00000029_0px_1px_4px,#06182c0d_0px_0px_0px_1px] z-10"
               >
                 <Link
                   href="/profile"

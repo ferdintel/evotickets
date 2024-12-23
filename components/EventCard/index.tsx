@@ -2,8 +2,9 @@ import Link from "next/link";
 import Image from "next/image";
 
 import { useDispatch } from "react-redux";
-import { CurrentEventDataSerialized, EventDataType } from "types/Events";
+import { useAppSelector } from "lib/store/hooks";
 import { setCurrentEvent } from "lib/store/slices/currentEventSlice";
+import { CurrentEventDataSerialized, EventDataType } from "types/Events";
 
 import { MdLocationOn } from "react-icons/md";
 import { TbCalendarEvent } from "react-icons/tb";
@@ -11,6 +12,7 @@ import { FaRegCircleUser } from "react-icons/fa6";
 import { BiSolidCategoryAlt } from "react-icons/bi";
 
 import { DEFAULT_EVENT_CATEGORY } from "validations/common";
+import { selectAuth } from "lib/store/slices/authSlice";
 
 type EventCardProps = {
   eventData: EventDataType;
@@ -18,6 +20,7 @@ type EventCardProps = {
 
 const EventCard = ({ eventData }: EventCardProps) => {
   const dispatch = useDispatch();
+  const { currentUser } = useAppSelector(selectAuth);
 
   const setCurrentEventData = () => {
     const eventDataSerialized = {
@@ -93,10 +96,18 @@ const EventCard = ({ eventData }: EventCardProps) => {
               <span className="truncate">{eventData.location}</span>
             </p>
 
-            <p className="flex items-center gap-x-1">
-              <FaRegCircleUser size={16} />
-              <span className="truncate">Role: Manager</span>
-            </p>
+            {/* role  */}
+            {currentUser?.isAdmin ? (
+              <p className="flex items-center gap-x-1">
+                <FaRegCircleUser size={16} />
+                <span className="truncate">Role: Admin</span>
+              </p>
+            ) : (
+              <p className="flex items-center gap-x-1">
+                <FaRegCircleUser size={16} />
+                <span className="truncate">Role: déterminé</span>
+              </p>
+            )}
           </div>
         </div>
       </Link>
