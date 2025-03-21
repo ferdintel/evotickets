@@ -1,9 +1,7 @@
-const Home = () => {
+export default function Home() {
   return (
     <main>
-      <h1>Accueil - Evotickets</h1>
+      <h1 className="text-center font-medium">Accueil - Evotickets</h1>
     </main>
   );
-};
-
-export default Home;
+}

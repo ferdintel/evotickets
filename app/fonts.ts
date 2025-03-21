@@ -1,9 +1,10 @@
-import { Inter } from "next/font/google";
+import { Quicksand } from "next/font/google";
 
-export const inter = Inter({
+export const fontSans = Quicksand({
   weight: ["300", "400", "500", "600", "700"],
   subsets: ["latin"],
   display: "swap",
-  variable: "--font-inter",
-  adjustFontFallback: false
+  variable: "--font-sans",
+  adjustFontFallback: false,
+  preload: true,
 });

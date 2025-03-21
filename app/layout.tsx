@@ -1,10 +1,8 @@
-import { inter } from "./fonts";
+import { fontSans } from "./fonts";
 import type { Metadata } from "next";
 import "./globals.css";
 
-import Header from "components/Header";
 import { Toaster } from "react-hot-toast";
-import { StoreProvider } from "./StoreProvider";
 
 export const metadata: Metadata = {
   title: "Evotickets",
@@ -18,15 +16,12 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="fr" className={`${inter.variable} antialiased`}>
+    <html lang="fr" className={`${fontSans.variable} antialiased`}>
       <body
         className={`px-4 mobileM:px-5 min-h-screen flex flex-col bg-background text-foreground font-inter`}
       >
-        <StoreProvider>
-          <Toaster />
-          <Header />
-          {children}
-        </StoreProvider>
+        <Toaster />
+        {children}
       </body>
     </html>
   );

@@ -23,14 +23,17 @@
       }
     ],
     "paths": {
+      "@/*": [
+        "./*"
+      ],
       "components/*": [
         "./components/*"
       ],
       "types/*": [
         "./types/*"
       ],
-      "validations/*": [
-        "./validations/*"
+      "validators/*": [
+        "./validators/*"
       ],
       "lib/*": [
         "./lib/*"
