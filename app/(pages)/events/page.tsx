@@ -1,13 +1,13 @@
 import ProtectedLayout from "@/components/ProtectedLayout";
 
-const Dashboard = () => {
+const Events = () => {
   return (
     <ProtectedLayout>
       <main>
-        <h1>Dashboard</h1>
+        <h1>Liste des événements</h1>
       </main>
     </ProtectedLayout>
   );
 };
 
-export default Dashboard;
+export default Events;

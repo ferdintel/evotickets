@@ -109,7 +109,7 @@ const InputField = <T extends Record<string, unknown>>({
                   : "Masquer le mot de passe"
               }
               onClick={toggle}
-              className="absolute right-2 p-2 text-gray-500 cursor-pointer hover:text-alternate duration-300
+              className="absolute right-2 p-2 text-gray-500 hover:text-alternate duration-300
               outline-alternate rounded-md"
             >
               {isPassword ? <LuEye size={20} /> : <LuEyeOff size={20} />}

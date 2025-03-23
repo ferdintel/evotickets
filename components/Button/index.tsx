@@ -28,7 +28,7 @@ const Button = ({
 }: ButtonProps) => {
   const commonStyles = `flex items-center justify-center gap-x-4 font-semibold ${
     size === "normal" ? "px-4 py-3" : "px-3 py-2 text-sm"
-  } rounded-lg text-nowrap cursor-pointer select-none disabled:bg-gray-200 disabled:text-foreground/50 disabled:shadow-[0_0_0_1px_inset_#94a3b8] disabled:cursor-not-allowed duration-300`;
+  } rounded-lg text-nowrap select-none disabled:bg-gray-200 disabled:text-foreground/50 disabled:shadow-[0_0_0_1px_inset_#94a3b8] disabled:cursor-not-allowed duration-300`;
 
   const variantPrimaryStyles =
     "bg-alternate/90 text-white hover:bg-alternate focus:bg-alternate focus:shadow-[0px_0px_0px_3px_inset_var(--alternate-light)]";

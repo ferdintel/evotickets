@@ -6,7 +6,7 @@ import Link from "next/link";
 import Image from "next/image";
 import Checkbox from "components/FormControls/Checkbox";
 import Button from "@/components/Button";
-import PublicRoute from "../PublicRoute";
+import PublicRoute from "@/components/PublicRoute";
 
 type AuthFormProps = {
   formType: "login" | "register";
