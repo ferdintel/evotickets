@@ -32,7 +32,7 @@ const EventHeader = () => {
     ? "..."
     : currentUser?.isAdmin
     ? "administrateur"
-    : currentEvent?.managerEmail === currentUser?.email
+    : currentEvent?.manager?.email === currentUser?.email
     ? "manager"
     : currentUser?.uid &&
       currentEvent?.members[currentUser.uid]?.role === "seller"

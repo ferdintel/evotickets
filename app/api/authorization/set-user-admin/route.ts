@@ -1,6 +1,8 @@
 import { NextResponse } from "next/server";
 import { adminFirebaseAuth } from "lib/firebase/admin";
 import { FirebaseAppError } from "firebase-admin/app";
+import { handleGetUserByEmailError } from "@/utils/handleGetUserByEmailError";
+import { FirebaseError } from "firebase/app";
 
 export async function POST(request: Request) {
   const { targetedUserEmail } = await request.json();
@@ -33,7 +35,7 @@ export async function POST(request: Request) {
       targetedUserEmail
     );
 
-     // 3 - set the user administrator
+    // 3 - set the user administrator
     await adminFirebaseAuth.setCustomUserClaims(targetedUser.uid, {
       role: { admin: true },
     });
@@ -46,20 +48,15 @@ export async function POST(request: Request) {
       { status: 200 }
     );
   } catch (error) {
-    if (error instanceof FirebaseAppError) {
-      return NextResponse.json(
-        {
-          sucess: false,
-          message: "Erreur lors de l'attribution du rôle: " + error.message,
-        },
-        { status: 500 }
-      );
-    } else {
-      console.log("Erreur lors de l'attribution du rôle:", error);
-      return NextResponse.json(
-        { sucess: false, message: "Erreur lors de l'attribution du rôle" },
-        { status: 500 }
-      );
+    console.log("Erreur lors de l'attribution du rôle d'administrateur:", error);
+
+    let errorMessage = "";
+    if (error instanceof Error) {
+      if ("code" in error)
+        errorMessage = handleGetUserByEmailError(error as FirebaseError);
+      else errorMessage = error.message;
     }
+
+    return NextResponse.json({ message: errorMessage }, { status: 500 });
   }
 }

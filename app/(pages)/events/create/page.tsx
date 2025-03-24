@@ -85,7 +85,7 @@ const CreateEvent = () => {
         location: eventData.eventLocation,
         imageCoverUrl: eventCoverUrl || "",
         createdBy: currentUser!.uid,
-        managerEmail: null,
+        manager: null,
         members: {},
         createdAt: serverTimestamp() as Timestamp,
         updatedAt: serverTimestamp() as Timestamp,

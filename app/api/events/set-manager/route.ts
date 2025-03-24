@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import { FirebaseError } from "firebase/app";
 import { adminFirebaseAuth, adminFirebaseDB } from "lib/firebase/admin";
 import { handleGetUserByEmailError } from "utils/handleGetUserByEmailError";
+import { FieldValue } from "firebase-admin/firestore";
 
 export async function POST(request: Request) {
   const { eventId, managerEmail } = await request.json();
@@ -30,9 +31,9 @@ export async function POST(request: Request) {
     }
 
     // 2 - check if the user who will become Manager exists (else the error will be caught in catch bloc)
-    await adminFirebaseAuth.getUserByEmail(managerEmail);
+    const managerInfos = await adminFirebaseAuth.getUserByEmail(managerEmail);
 
-    // 3 - check if event exists and is not already completed
+    // 3 - check if event exists and is not already finished
     const eventDoc = await adminFirebaseDB
       .collection("events")
       .doc(eventId)
@@ -49,22 +50,31 @@ export async function POST(request: Request) {
       );
     }
 
-    // set managerId =
+    // set the manager of event
     await adminFirebaseDB
       .collection("events")
       .doc(eventId)
-      .update({ managerEmail });
+      .update({
+        manager: {
+          uid: managerInfos.uid,
+          email: managerEmail,
+          displayName: managerInfos.displayName,
+        },
+        updatedAt: FieldValue.serverTimestamp(),
+      });
 
     return NextResponse.json(
       {
         success: true,
-        message: `${managerEmail} est maintenant le manager de l'événement: ${
-          eventDoc.data()?.name
-        }.`,
+        message: `${
+          managerInfos.displayName
+        } est maintenant le manager de l'événement: ${eventDoc.data()?.name}.`,
       },
       { status: 200 }
     );
   } catch (error) {
+    console.log("Erreur lors de la définition du manager:", error);
+
     let errorMessage = "";
     if (error instanceof Error) {
       if ("code" in error)

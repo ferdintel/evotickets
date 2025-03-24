@@ -2,8 +2,8 @@
 
 import Image from "next/image";
 import Button from "components/Button";
-import SetManagerWrapper from "components/SetManagerWrapper";
-import InviteMemberWrapper from "@/components/InviteMemberWrapper";
+import SetManagerDialog from "components/SetManagerDialog";
+import InviteMemberDialog from "@/components/InviteMemberDialog";
 import ProtectedLayout from "@/components/ProtectedLayout";
 
 import { useParams } from "next/navigation";
@@ -177,22 +177,22 @@ const EventGlobalStats = () => {
           </div>
 
           {/* body */}
-          <div className="flex flex-col gap-y-3">
+          <div className="grow flex flex-col gap-y-3">
             {/* set the event manager or display its email */}
             <div className="flex items-center justify-between">
               <p className="text-foreground/80">Manager</p>
-              {currentEvent?.managerEmail ? (
+              {currentEvent?.manager?.email ? (
                 <p className="font-semibold">
-                  {currentEvent.managerEmail === currentUser?.email
+                  {currentEvent.manager.uid === currentUser?.uid
                     ? "Vous"
-                    : currentEvent.managerEmail}
+                    : currentEvent.manager.displayName + ' · ' + currentEvent.manager.email }
                 </p>
               ) : (
-                <SetManagerWrapper />
+                <SetManagerDialog />
               )}
             </div>
 
-            {/* count  */}
+            {/* count vendors & controllers */}
             <div className="-mx-4 pb-4 px-4 flex flex-col gap-y-2 border-b border-gray-300">
               <p className="flex items-center justify-between">
                 <span className="text-foreground/80">Vendeurs</span>
@@ -217,9 +217,9 @@ const EventGlobalStats = () => {
               </p>
             </div>
 
-            {/* button to add a user to your team */}
-            <div className="flex justify-center">
-              <InviteMemberWrapper />
+            <div className="grow flex justify-center items-center">
+              {/* button to add a user to your team */}
+              <InviteMemberDialog />
             </div>
           </div>
         </div>

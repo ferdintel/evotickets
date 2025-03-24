@@ -14,8 +14,17 @@ import { BiLoaderCircle } from "react-icons/bi";
 import { LuCalendarPlus } from "react-icons/lu";
 import { HiOutlineLogout } from "react-icons/hi";
 import { FaRegCircleUser } from "react-icons/fa6";
+import { usePathname } from "next/navigation";
+
+const navLinks = [
+  { title: "Tableau de bord", link: "/dashboard" },
+  { title: "Événements", link: "/events" },
+  { title: "Invitations", link: "/invitations" },
+];
 
 const Header = () => {
+  const pathName = usePathname() as string;
+
   const [showDropdownMenu, setShowDropdownMenu] = useState(false);
   const toggleUserDropdownMenu = () =>
     setShowDropdownMenu((prevState) => !prevState);
@@ -55,23 +64,19 @@ const Header = () => {
         {/* navlinks */}
         {currentUser && (
           <nav className="flex items-center gap-x-4">
-            <Link
-              href="/dashboard"
-              className="hover:text-white/80 duration-300 text-nowrap"
-            >
-              Tableau de bord
-            </Link>
-
-            <Link href="/events" className="hover:text-white/80 duration-300">
-              Événements
-            </Link>
-
-            <Link
-              href="/invitations"
-              className="hover:text-white/80 duration-300"
-            >
-              Invitations
-            </Link>
+            {navLinks.map(({ title, link }) => (
+              <Link
+                key={link}
+                href={link}
+                className={`${
+                  pathName.includes(link)
+                    ? "bg-alternate-light/50 text-white"
+                    : "hover:text-white/80"
+                } px-2 py-1 rounded-md duration-300 text-nowrap`}
+              >
+                {title}
+              </Link>
+            ))}
 
             {/* btn to create event - display for only admin */}
             {currentUser?.isAdmin && (

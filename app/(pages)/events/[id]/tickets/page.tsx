@@ -198,10 +198,10 @@ const EventTickets = () => {
                   <SelectField
                     placeholder="Sélectionnez une action"
                     selectOptions={[
-                      { text: "Valid", value: "Valid" },
-                      { text: "Active", value: "Active" },
-                      { text: "Used", value: "Used" },
-                      { text: "Invalid", value: "Invalid" },
+                      { text: "Valide", value: "Valid" },
+                      { text: "Actif", value: "Active" },
+                      { text: "Utilisé", value: "Used" },
+                      { text: "Invalide", value: "Invalid" },
                     ]}
                     addLabelStyles="w-fit"
                   />

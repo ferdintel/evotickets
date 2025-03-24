@@ -19,6 +19,19 @@ export type EventCover = {
 };
 
 // event data to store in firestore
+export type EventMember = {
+  [key: string]: {
+    uid: string;
+    email: string;
+    displayName: string;
+    role: EventMemberRole;
+  };
+};
+export type EventManager = {
+  uid: string;
+  email: string;
+  displayName: string;
+};
 export type StoreEventDataType = {
   name: string;
   category: EventCategory;
@@ -27,8 +40,8 @@ export type StoreEventDataType = {
   location: string;
   imageCoverUrl: string;
   createdBy: string;
-  managerEmail: string | null;
-  members: { [key: string]: { role: string; assignedTicketQty: number } };
+  manager: EventManager | null;
+  members: EventMember;
   createdAt: Timestamp;
   updatedAt: Timestamp;
 };
@@ -48,8 +61,8 @@ export type CurrentEventDataSerialized = {
   location: string;
   imageCoverUrl: string;
   createdBy: string;
-  managerEmail: string | null;
-  members: { [key: string]: { role: string; assignedTicketQty: number } };
+  manager: EventManager | null;
+  members: EventMember;
   createdAt: string;
   updatedAt: string;
 };
@@ -57,4 +70,52 @@ export type CurrentEventDataSerialized = {
 // to set manager for an event
 export type SetEventManagerFormValues = {
   managerEmail: string;
+};
+
+// to invite a member to join your team for a specific event
+export enum EventMemberRole {
+  VENDOR = "VENDOR",
+  CONTROLLER = "CONTROLLER",
+}
+export const eventMemberRoleInFrench: Record<EventMemberRole, string> = {
+  [EventMemberRole.VENDOR]: "Vendeur",
+  [EventMemberRole.CONTROLLER]: "Contrôleur",
+};
+export type InviteMemberFormValues = {
+  memberEmail: string;
+  memberRole: EventMemberRole;
+};
+
+export enum InvitationStatus {
+  PENDING = "PENDING",
+  ACCEPTED = "ACCEPTED",
+  REJECTED = "REJECTED",
+}
+
+export const invitationStatusInFrench: Record<InvitationStatus, string> = {
+  [InvitationStatus.PENDING]: "En attente",
+  [InvitationStatus.ACCEPTED]: "Acceptée",
+  [InvitationStatus.REJECTED]: "Refusée",
+};
+
+export type StoreInvitationDataType = {
+  eventId: string;
+  invitee: {
+    uid: string;
+    email: string;
+    displayName: string;
+    role: EventMemberRole;
+  };
+  invitedBy: {
+    uid: string;
+    email: string;
+    displayName: string;
+  };
+  status: InvitationStatus;
+  createdAt: Timestamp;
+  updatedAt: Timestamp;
+};
+
+export type InvitationDataType = StoreInvitationDataType & {
+  id: string;
 };

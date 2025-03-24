@@ -45,7 +45,7 @@ const EventCard = ({ eventData }: EventCardProps) => {
     ? "..."
     : currentUser?.isAdmin
     ? "administrateur"
-    : currentEvent?.managerEmail === currentUser?.email
+    : currentEvent?.manager?.email === currentUser?.email
     ? "manager"
     : currentUser?.uid &&
       currentEvent?.members[currentUser.uid]?.role === "seller"
@@ -70,8 +70,8 @@ const EventCard = ({ eventData }: EventCardProps) => {
               "/images/events/placeholder-image-300x225.png"
             }
             alt={eventData.name}
-            // quality={60}
-            // unoptimized
+            quality={60}
+            unoptimized
             placeholder="blur"
             blurDataURL="/images/events/placeholder-image-300x225.png"
             className="min-w-32 w-full h-32 object-cover group-hover:scale-125 duration-300"

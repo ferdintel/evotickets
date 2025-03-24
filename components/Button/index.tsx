@@ -13,6 +13,7 @@ type ButtonProps = {
   isLoading?: boolean;
   variant?: "primary" | "secondary";
   size?: "normal" | "small";
+  title?: string
 };
 
 const Button = ({
@@ -25,6 +26,7 @@ const Button = ({
   isLoading = false,
   variant = "primary",
   size = "normal",
+  title=""
 }: ButtonProps) => {
   const commonStyles = `flex items-center justify-center gap-x-4 font-semibold ${
     size === "normal" ? "px-4 py-3" : "px-3 py-2 text-sm"
@@ -41,6 +43,7 @@ const Button = ({
       {link ? (
         <Link
           href={link}
+          title= {title}
           className={`${commonStyles} 
           ${variant === "primary" ? variantPrimaryStyles : variantSecondarytyles} 
           ${addStyles}`}
@@ -50,6 +53,7 @@ const Button = ({
       ) : (
         <button
           type={type}
+          title= {title}
           disabled={disabled}
           onClick={onClick}
           className={`${commonStyles} 

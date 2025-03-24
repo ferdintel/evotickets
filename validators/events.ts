@@ -1,5 +1,10 @@
 import { z, ZodType } from "zod";
-import { CreateEventFormValues, SetEventManagerFormValues } from "types/Events";
+import {
+  CreateEventFormValues,
+  EventMemberRole,
+  InviteMemberFormValues,
+  SetEventManagerFormValues,
+} from "types/Events";
 import { defaultEventCategoryValues, REQUIRED_FIELD_MESSAGE } from "./common";
 
 export const CreateEventFormValidation: ZodType<CreateEventFormValues> =
@@ -42,4 +47,18 @@ export const SetEventManagerFormValidation: ZodType<SetEventManagerFormValues> =
       .string()
       .min(1, REQUIRED_FIELD_MESSAGE)
       .email({ message: "Adresse email invalide" }),
+  });
+
+export const InviteMemberFormValidation: ZodType<InviteMemberFormValues> =
+  z.object({
+    memberEmail: z
+      .string()
+      .min(1, REQUIRED_FIELD_MESSAGE)
+      .email({ message: "Adresse email invalide" }),
+    memberRole: z.enum(
+      Object.values(EventMemberRole) as [EventMemberRole, ...EventMemberRole[]],
+      {
+        errorMap: () => ({ message: "le rôle est obligatoire" }),
+      }
+    ),
   });

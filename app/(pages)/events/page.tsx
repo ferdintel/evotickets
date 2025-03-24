@@ -13,15 +13,15 @@ import { LuCalendarMinus } from "react-icons/lu";
 import { EventDataType } from "types/Events";
 import { useAppSelector } from "lib/store/hooks";
 import { selectAuth } from "lib/store/slices/authSlice";
-import { getQueryUSerEventsAllowed } from "utils/queries";
+import { getQueryUserEventsAllowed } from "utils/queries";
 
 const Events = () => {
   const { currentUser } = useAppSelector(selectAuth);
 
   // to get all events associated with the current user
-  const queryConstraints = getQueryUSerEventsAllowed(
+  const queryConstraints = getQueryUserEventsAllowed(
     currentUser?.isAdmin as boolean,
-    currentUser?.email as string
+    currentUser?.uid as string
   );
   const { docs, isLoading, error } = useDocsFromFirestore<EventDataType>(
     "events",
@@ -60,14 +60,16 @@ const Events = () => {
           </div>
 
           {/* searchbar and sorting */}
-          <div className="w-sm flex items-center gap-x-3">
-            <InputField
-              inputType="search"
-              placeholder="Rechercher un événement"
-              onKeyDown={handleInputSearchKeyDown}
-              onChange={handleInputSearchChange}
-            />
-          </div>
+          {docs.length > 0 && (
+            <div className="w-sm flex items-center gap-x-3">
+              <InputField
+                inputType="search"
+                placeholder="Rechercher un événement"
+                onKeyDown={handleInputSearchKeyDown}
+                onChange={handleInputSearchChange}
+              />
+            </div>
+          )}
         </div>
 
         {/* when an error has occurred */}
@@ -76,7 +78,7 @@ const Events = () => {
         {/* is loading */}
         {!error && isLoading && (
           <p className="flex items-center justify-center text-center font-medium gap-x-4">
-            Chargement des événements{" "}
+            Chargement des événements
             <span className="animate-spin text-alternate">
               <BiLoaderCircle size={20} />
             </span>
@@ -103,17 +105,21 @@ const Events = () => {
           </div>
         ) : (
           // event list is filled
-          <ul className="grid grid-cols-3 gap-5">
-            {docs
-              .filter((currentEvent) =>
-                currentEvent.name
-                  .toLocaleLowerCase()
-                  .startsWith(searchValue.toLocaleLowerCase())
-              )
-              .map((data) => (
-                <EventCard key={data.id} eventData={data} />
-              ))}
-          </ul>
+          !error &&
+          !isLoading &&
+          docs.length > 0 && (
+            <ul className="grid grid-cols-3 gap-5">
+              {docs
+                .filter((currentEvent) =>
+                  currentEvent.name
+                    .toLocaleLowerCase()
+                    .startsWith(searchValue.toLocaleLowerCase())
+                )
+                .map((data) => (
+                  <EventCard key={data.id} eventData={data} />
+                ))}
+            </ul>
+          )
         )}
       </main>
     </ProtectedLayout>

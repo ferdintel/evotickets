@@ -3,7 +3,6 @@
 import toast from "react-hot-toast";
 import Button from "components/Button";
 import InputField from "components/FormControls/InputField";
-import SelectField from "components/FormControls/SelectField";
 
 import { useState } from "react";
 import { useParams } from "next/navigation";
@@ -15,7 +14,7 @@ import { SetEventManagerFormValues } from "types/Events";
 import { SetEventManagerFormValidation } from "validators/events";
 import { FirebaseError } from "firebase/app";
 
-const InviteMemberWrapper = () => {
+const SetManagerDialog = () => {
   const params = useParams<{ id: string }>();
   const eventId = params?.id;
 
@@ -33,15 +32,17 @@ const InviteMemberWrapper = () => {
   });
 
   // show and hide wrapper of set manager form
-  const [showInviteMemberWrapper, setSetShowManagerWrapper] = useState(false);
-  const displayInviteMemberWrapper = () => setSetShowManagerWrapper(true);
-  const hideInviteMemberWrapper = () => {
-    setSetShowManagerWrapper(false);
+  const [showSetManagerDialog, setSetShowManagerDialog] = useState(false);
+  const displaySetManagerDialog = () => setSetShowManagerDialog(true);
+  const hideSetManagerDialog = () => {
+    setSetShowManagerDialog(false);
     reset();
   };
 
-  // invite member
-  const inviteMember = async ({ managerEmail }: SetEventManagerFormValues) => {
+  // set manager for current event
+  const setEventManager = async ({
+    managerEmail,
+  }: SetEventManagerFormValues) => {
     try {
       const authToken = await firebaseAuth.currentUser?.getIdToken();
       const response = await fetch("/api/events/set-manager", {
@@ -57,7 +58,7 @@ const InviteMemberWrapper = () => {
 
       if (response.ok) {
         toast.success(data.message);
-        hideInviteMemberWrapper();
+        hideSetManagerDialog();
       } else {
         toast.error(data.message);
       }
@@ -75,38 +76,30 @@ const InviteMemberWrapper = () => {
 
   return (
     <>
-      <Button size="small" onClick={displayInviteMemberWrapper}>
-        Invitez un membre de votre équipe
+      <Button
+        size="small"
+        variant="secondary"
+        onClick={displaySetManagerDialog}
+      >
+        Définir un manager
       </Button>
 
       {/* profile and logout buttons */}
-      {showInviteMemberWrapper && (
+      {showSetManagerDialog && (
         <form
-          onSubmit={handleSubmit(inviteMember)}
-          className="absolute left-1/2 -translate-x-1/2 -translate-y-1/2 max-w-80 w-full bg-white rounded-xl p-5
-          flex flex-col gap-y-4 shadow-[#00000029_0px_1px_4px,#06182c0d_0px_0px_0px_1px] z-10"
+          onSubmit={handleSubmit(setEventManager)}
+          className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 max-w-80 w-full bg-white rounded-xl p-5
+          flex flex-col gap-y-4 shadow z-10"
         >
-          <div className="flex flex-col gap-y-2">
-            <InputField
-              fieldName="managerEmail"
-              inputType="email"
-              labelText="Email du futur manager:"
-              placeholder="Adresse email du futur manager"
-              isAutoFocus={true}
-              register={register}
-              errorMessage={errors.managerEmail?.message}
-            />
-
-            {/* <SelectField
-              fieldName="managerEmail"
-              
-              labelText="Email du futur manager:"
-              placeholder="Adresse email du futur manager"
-              isAutoFocus={true}
-            //   register={register}
-              errorMessage={errors.managerEmail?.message}
-            /> */}
-          </div>
+          <InputField
+            fieldName="managerEmail"
+            inputType="email"
+            labelText="Email du futur manager:"
+            placeholder="Adresse email du futur manager"
+            isAutoFocus={true}
+            register={register}
+            errorMessage={errors.managerEmail?.message}
+          />
 
           <div className="flex justify-end gap-4">
             <Button
@@ -122,7 +115,7 @@ const InviteMemberWrapper = () => {
               size="small"
               variant="secondary"
               type="button"
-              onClick={hideInviteMemberWrapper}
+              onClick={hideSetManagerDialog}
             >
               Annuler
             </Button>
@@ -131,9 +124,9 @@ const InviteMemberWrapper = () => {
       )}
 
       {/* wrapper to hide form when clicked */}
-      {showInviteMemberWrapper && (
+      {showSetManagerDialog && (
         <div
-          onClick={hideInviteMemberWrapper}
+          onClick={hideSetManagerDialog}
           className="bg-dark/50 fixed top-0 left-0 w-screen h-screen z-[5]"
         ></div>
       )}
@@ -141,4 +134,4 @@ const InviteMemberWrapper = () => {
   );
 };
 
-export default InviteMemberWrapper;
+export default SetManagerDialog;
