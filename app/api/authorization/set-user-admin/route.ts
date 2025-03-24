@@ -1,30 +1,39 @@
-import "server-only";
-
 import { NextResponse } from "next/server";
-import { firebaseAuth } from "lib/firebase/client";
 import { adminFirebaseAuth } from "lib/firebase/admin";
 import { FirebaseAppError } from "firebase-admin/app";
 
 export async function POST(request: Request) {
   const { targetedUserEmail } = await request.json();
 
+  // to get authToken of calling user
+  const authorization = request.headers.get("Authorization");
+  const authToken = authorization?.startsWith("Bearer ")
+    ? authorization.split("Bearer ")[1]
+    : null;
+
+  if (!authToken) {
+    return NextResponse.json(
+      { message: "Non autorisé : Token d'autorisation manquant." },
+      { status: 401 }
+    );
+  }
+
   try {
-    // check if calling user is an admin
-    // const callingUser = firebaseAuth.currentUser?.email;
-    // console.log("callingUser", callingUser);
+    // 1 - check if calling user is an admin
+    const decodedToken = await adminFirebaseAuth.verifyIdToken(authToken);
+    if (!decodedToken.role || !decodedToken.role.admin) {
+      return NextResponse.json(
+        { message: "Non autorisé : Accès administrateur requis." },
+        { status: 403 }
+      );
+    }
 
-    // if calling user is not an admin, return an error
-    // if (!callingUserIsAdmin) {
-    //   return NextResponse.json(
-    //     { message: "Vous n'êtes pas autorisé à effectué cette action" },
-    //     { status: 401 }
-    //   );
-    // }
-
+    // 2 - check if the user who will become Administrator exists (else the error will be caught in catch bloc)
     const targetedUser = await adminFirebaseAuth.getUserByEmail(
       targetedUserEmail
     );
 
+     // 3 - set the user administrator
     await adminFirebaseAuth.setCustomUserClaims(targetedUser.uid, {
       role: { admin: true },
     });

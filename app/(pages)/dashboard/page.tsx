@@ -1,3 +1,4 @@
+"use client";
 import ProtectedLayout from "@/components/ProtectedLayout";
 
 const Dashboard = () => {

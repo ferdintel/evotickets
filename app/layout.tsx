@@ -4,6 +4,7 @@ import "./globals.css";
 
 import { StoreProvider } from "./StoreProvider";
 import { Toaster } from "react-hot-toast";
+import Header from "@/components/Header";
 
 export const metadata: Metadata = {
   title: "Evotickets",
@@ -23,6 +24,7 @@ export default function RootLayout({
       >
         <StoreProvider>
           <Toaster />
+          <Header />
           {children}
         </StoreProvider>
       </body>

@@ -1,13 +1,15 @@
 "use client";
 
 import { HTMLInputAutoCompleteAttribute, useState } from "react";
-import { LuEye, LuEyeOff } from "react-icons/lu";
+
 import {
   FieldValues,
   Path,
   RegisterOptions,
   UseFormRegister,
 } from "react-hook-form";
+
+import { LuEye, LuEyeOff, LuSearch } from "react-icons/lu";
 
 type InputFieldProps<T extends FieldValues> = {
   inputType?: React.HTMLInputTypeAttribute;
@@ -49,10 +51,10 @@ const InputField = <T extends Record<string, unknown>>({
   const [isPassword, setIsPassword] = useState(true);
   const toggle = () => setIsPassword((value) => !value);
 
-  const inputClassName = `w-full px-4 py-3 placeholder:font-medium rounded-lg outline-none border ${
+  const inputClassName = `w-full px-4 py-3 flex items-center placeholder:font-medium rounded-lg outline-none border ${
     errorMessage ? "border-error" : "border-gray-300 hover:border-gray-500"
   } focus:shadow-[0_0_0_1px_var(--alternate),0_0_0_3px_inset_var(--alternate-light)] focus:border-alternate duration-300 ${
-    inputType === "password" ? "pr-12" : ""
+    inputType === "password" ? "pr-12" : inputType === "search" ? "pl-11" : ""
   } ${addInputStyles}`;
 
   return (
@@ -70,7 +72,7 @@ const InputField = <T extends Record<string, unknown>>({
           </span>
         )}
 
-        {/* input and btn to toggle password for input:password */}
+        {/* input */}
         <div className="flex items-center">
           {/* input work with react-hook-form */}
           {register && fieldName ? (
@@ -114,6 +116,13 @@ const InputField = <T extends Record<string, unknown>>({
             >
               {isPassword ? <LuEye size={20} /> : <LuEyeOff size={20} />}
             </button>
+          )}
+
+          {/* for input:search */}
+          {inputType === "search" && (
+            <span className="absolute left-3 text-gray-500">
+              <LuSearch size={20} />
+            </span>
           )}
         </div>
       </label>

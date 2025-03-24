@@ -33,8 +33,8 @@ const Button = ({
   const variantPrimaryStyles =
     "bg-alternate/90 text-white hover:bg-alternate focus:bg-alternate focus:shadow-[0px_0px_0px_3px_inset_var(--alternate-light)]";
 
-  const variantSlateStyles =
-    "bg-[#00000012] text-foreground/80 shadow-[0px_0px_0px_1px_inset_#9ca3af] hover:bg-[#0000001f] focus:bg-[#0000001f] focus:shadow-[0px_0px_0px_3px_inset_#1111112b]";
+  const variantSecondarytyles =
+    "bg-[#00000012] text-foreground shadow-[0px_0px_0px_1px_inset_#9ca3af] hover:bg-[#0000001f] focus:bg-[#0000001f] focus:shadow-[0px_0px_0px_3px_inset_#1111112b]";
 
   return (
     <>
@@ -42,7 +42,7 @@ const Button = ({
         <Link
           href={link}
           className={`${commonStyles} 
-          ${variant === "primary" ? variantPrimaryStyles : variantSlateStyles} 
+          ${variant === "primary" ? variantPrimaryStyles : variantSecondarytyles} 
           ${addStyles}`}
         >
           {children}
@@ -53,7 +53,7 @@ const Button = ({
           disabled={disabled}
           onClick={onClick}
           className={`${commonStyles} 
-          ${variant === "primary" ? variantPrimaryStyles : variantSlateStyles} 
+          ${variant === "primary" ? variantPrimaryStyles : variantSecondarytyles} 
           ${addStyles}`}
         >
           {children}

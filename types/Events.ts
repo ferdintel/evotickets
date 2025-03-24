@@ -1,5 +1,5 @@
 import { Timestamp } from "firebase/firestore";
-import { defaultEventCategoryValues } from "validations/common";
+import { defaultEventCategoryValues } from "validators/common";
 
 export type EventCategory = (typeof defaultEventCategoryValues)[number];
 

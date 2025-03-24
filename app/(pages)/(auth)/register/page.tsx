@@ -8,8 +8,7 @@ import { RegisterFormValues } from "types/Auth";
 import { RegisterFormValidation } from "validators/authForm";
 
 import { FirebaseError } from "firebase/app";
-import { doc, setDoc } from "firebase/firestore";
-import { firebaseAuth, firebaseDB } from "lib/firebase/client";
+import { firebaseAuth } from "lib/firebase/client";
 import { createUserWithEmailAndPassword } from "firebase/auth";
 
 import toast from "react-hot-toast";

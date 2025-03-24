@@ -1,5 +1,7 @@
-import authSlice from "./slices/authSlice";
 import storage from "./storage";
+
+import authSlice from "./slices/authSlice";
+import currentEventSlice from "./slices/currentEventSlice";
 
 import { combineReducers, configureStore } from "@reduxjs/toolkit";
 
@@ -19,11 +21,12 @@ const persistConfig = {
   key: "root",
   version: 1,
   storage,
-  whitelist: ["auth"],
+  whitelist: ["auth", "currentEvent"],
 };
 
 const rootReducer = combineReducers({
   auth: authSlice.reducer,
+  currentEvent: currentEventSlice.reducer,
 });
 
 const persistedReducer = persistReducer(persistConfig, rootReducer);

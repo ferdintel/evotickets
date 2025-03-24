@@ -53,37 +53,39 @@ const Header = () => {
       {/* right content */}
       <div className="flex items-center gap-x-4 text-[#f8f4ff]">
         {/* navlinks */}
-        <nav className="flex items-center gap-x-4">
-          <Link
-            href="/dashboard"
-            className="hover:text-white/80 duration-300 text-nowrap"
-          >
-            Tableau de bord
-          </Link>
-
-          <Link href="/events" className="hover:text-white/80 duration-300">
-            Événements
-          </Link>
-
-          <Link
-            href="/invitations"
-            className="hover:text-white/80 duration-300"
-          >
-            Invitations
-          </Link>
-
-          {/* btn to create event - display for only admin */}
-          {currentUser?.isAdmin && (
+        {currentUser && (
+          <nav className="flex items-center gap-x-4">
             <Link
-              href="/events/create"
-              title="Créer un événement"
-              className="p-2 rounded-[4px] hover:bg-alternate-light focus:bg-alternate-light focus:shadow-[0px_0px_0px_4px_#ffffff1f]
-              duration-300"
+              href="/dashboard"
+              className="hover:text-white/80 duration-300 text-nowrap"
             >
-              <LuCalendarPlus size={24} />
+              Tableau de bord
             </Link>
-          )}
-        </nav>
+
+            <Link href="/events" className="hover:text-white/80 duration-300">
+              Événements
+            </Link>
+
+            <Link
+              href="/invitations"
+              className="hover:text-white/80 duration-300"
+            >
+              Invitations
+            </Link>
+
+            {/* btn to create event - display for only admin */}
+            {currentUser?.isAdmin && (
+              <Link
+                href="/events/create"
+                title="Créer un événement"
+                className="p-2 rounded-[4px] hover:bg-alternate-light focus:bg-alternate-light focus:shadow-[0px_0px_0px_4px_#ffffff1f]
+              duration-300"
+              >
+                <LuCalendarPlus size={24} />
+              </Link>
+            )}
+          </nav>
+        )}
 
         {/* user account */}
         {currentUser ? (
@@ -110,7 +112,7 @@ const Header = () => {
             {showDropdownMenu && (
               <div
                 className="absolute top-12 right-0 min-w-52 bg-white rounded-xl p-2 flex flex-col gap-y-1
-                shadow-[#00000029_0px_1px_4px,#06182c0d_0px_0px_0px_1px] z-10"
+                shadow z-10"
               >
                 <Link
                   href="/profile"

@@ -3,21 +3,13 @@
 import Header from "@/components/Header";
 import ProtectedRoute from "@/components/ProtectedRoute";
 
-type ProtectedRoutesLayoutProps = {
+type ProtectedLayoutProps = {
   children: React.ReactNode;
   adminOnly?: boolean;
 };
 
-const ProtectedRoutesLayout = ({
-  children,
-  adminOnly,
-}: ProtectedRoutesLayoutProps) => {
-  return (
-    <>
-      <Header />
-      {children}
-    </>
-  );
+const ProtectedLayout = ({ children, adminOnly }: ProtectedLayoutProps) => {
+  return <>{children}</>;
 };
 
-export default ProtectedRoute(ProtectedRoutesLayout);
+export default ProtectedRoute(ProtectedLayout);
