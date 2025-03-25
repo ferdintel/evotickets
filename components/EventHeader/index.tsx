@@ -15,9 +15,9 @@ import { TbHomeStats, TbLineScan, TbTicket } from "react-icons/tb";
 
 const eventTabs = [
   { title: "Global", link: "/", icon: <TbHomeStats size={20} /> },
-  { title: "Billeterie", link: "tickets", icon: <TbTicket size={20} /> },
-  { title: "Équipe", link: "team", icon: <PiUsersThree size={20} /> },
-  { title: "Scanner", link: "scan", icon: <TbLineScan size={20} /> },
+  { title: "Billeterie", link: "/tickets", icon: <TbTicket size={20} /> },
+  { title: "Équipe", link: "/team", icon: <PiUsersThree size={20} /> },
+  { title: "Scanner", link: "/scan", icon: <TbLineScan size={20} /> },
 ];
 
 const EventHeader = () => {
@@ -29,18 +29,18 @@ const EventHeader = () => {
   const currentEvent = useAppSelector(selectCurrentEvent);
   const { currentUser, pending } = useAppSelector(selectAuth);
 
-    // const eventUserRole = pending
-    // ? "..."
-    // : currentUser?.isAdmin
-    // ? "administrateur"
-    // : currentEvent?.manager?.uid === currentUser?.uid
-    // ? "manager"
-    // : currentUser?.uid &&
-    //   currentEvent?.members[currentUser.uid]?.role === EventMemberRole.VENDOR
-    // ? "vendeur"
-    // : "contrôleur";
+  // const eventUserRole = pending
+  // ? "..."
+  // : currentUser?.isAdmin
+  // ? "administrateur"
+  // : currentEvent?.manager?.uid === currentUser?.uid
+  // ? "manager"
+  // : currentUser?.uid &&
+  //   currentEvent?.members[currentUser.uid]?.role === EventMemberRole.VENDOR
+  // ? "vendeur"
+  // : "contrôleur";
 
-    const eventUserRole = 'A DEFINIR'
+  const eventUserRole = "A DEFINIR";
 
   return (
     <>
@@ -74,25 +74,36 @@ const EventHeader = () => {
 
           {/* event tabs */}
           <div className="flex items-center gap-x-1 font-semibold text-foreground/80 text-sm">
-            {eventTabs.map(({ title, link, icon }) => (
-              <Link
-                key={title}
-                href={
-                  link ? `/events/${eventId}/${link}` : `/events/${eventId}`
-                }
-                className={`flex items-center gap-x-1 px-2 py-[6px] rounded-md duration-300
-            ${
-              title === "Global" && pathName === `/events/${eventId}`
-                ? "bg-alternate-light/50 text-alternate"
-                : pathName.endsWith(link)
-                ? "bg-alternate-light/50 text-alternate"
-                : "hover:text-alternate"
-            }`}
-              >
-                <span> {icon} </span>
-                {title}
-              </Link>
-            ))}
+            {eventTabs.map(({ title, link, icon }) => {
+              // show all tabs only for admins or event manager
+              const hasAccess =
+                currentUser.isAdmin ||
+                currentUser.uid === currentEvent?.manager?.uid;
+
+              // do not display restricted links without permission
+              if (link !== "/scan" && !hasAccess) {
+                return null;
+              }
+
+              return (
+                <Link
+                  key={title}
+                  href={
+                    link ? `/events/${eventId}${link}` : `/events/${eventId}`
+                  }
+                  className={`flex items-center gap-x-1 px-2 py-[6px] rounded-md duration-300
+                  ${
+                    (title === "Global" && pathName === `/events/${eventId}`) ||
+                    pathName.endsWith(link)
+                      ? "bg-alternate-light/50 text-alternate"
+                      : "hover:text-alternate"
+                  }`}
+                >
+                  <span>{icon}</span>
+                  {title}
+                </Link>
+              );
+            })}
           </div>
         </div>
       )}

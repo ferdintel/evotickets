@@ -9,11 +9,16 @@ import ToastSuccessMessage from "components/ToastSuccessMessage";
 import { useForm } from "react-hook-form";
 import { FirebaseError } from "firebase/app";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { selectAuth } from "@/lib/store/slices/authSlice";
+import { useAppSelector } from "@/lib/store/hooks";
 import { GenerateTicketsFormValidation } from "validators/tikets";
 import { DefaultCurrencies, GenerateTicketsFormValues } from "types/Tickets";
+
 import { RiFolderDownloadFill } from "react-icons/ri";
 
 const EventTickets = () => {
+  const { currentUser, pending } = useAppSelector(selectAuth);
+
   const {
     handleSubmit,
     register,
@@ -78,6 +83,7 @@ const EventTickets = () => {
   return (
     <div className="flex flex-col gap-y-6">
       {/* tickets generation */}
+
       <div className="flex flex-col gap-y-2">
         <h2 className="text-lg font-semibold">
           Génération des nouveaux billets
