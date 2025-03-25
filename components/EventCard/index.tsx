@@ -10,7 +10,11 @@ import {
   setCurrentEvent,
 } from "lib/store/slices/currentEventSlice";
 
-import { CurrentEventDataSerialized, EventDataType } from "types/Events";
+import {
+  CurrentEventDataSerialized,
+  EventDataType,
+  EventMemberRole,
+} from "types/Events";
 
 import { MdLocationOn } from "react-icons/md";
 import { TbCalendarEvent } from "react-icons/tb";
@@ -41,16 +45,16 @@ const EventCard = ({ eventData }: EventCardProps) => {
     dispatch(setCurrentEvent(eventDataSerialized));
   };
 
-  const eventUserRole = pending
-    ? "..."
-    : currentUser?.isAdmin
-    ? "administrateur"
-    : currentEvent?.manager?.email === currentUser?.email
-    ? "manager"
-    : currentUser?.uid &&
-      currentEvent?.members[currentUser.uid]?.role === "seller"
-    ? "vendeur"
-    : "contrôleur";
+  // const eventUserRole = pending
+  //   ? "..."
+  //   : currentEvent?.manager?.uid === currentUser?.uid
+  //   ? "manager"
+  //   : currentUser?.uid &&
+  //     currentEvent?.members[currentUser.uid]?.role === EventMemberRole.VENDOR
+  //   ? "vendeur"
+  //   : "contrôleur";
+
+  const eventUserRole = "A DEFINIR";
 
   return (
     <li>
@@ -122,10 +126,18 @@ const EventCard = ({ eventData }: EventCardProps) => {
             {/* role  */}
             <p className="flex items-center gap-x-1">
               <FaRegCircleUser size={16} />
-              <span className="truncate">
-                Role:{" "}
-                {eventUserRole[0].toUpperCase().concat(eventUserRole.slice(1))}
-              </span>
+              {currentUser?.isAdmin ? (
+                <span>Manager: {eventData?.manager?.displayName || "—"}</span>
+              ) : currentUser?.uid === eventData.manager?.uid ? (
+                <span>Rôle: Manager</span>
+              ) : (
+                <span className="truncate">
+                  Role:{" "}
+                  {eventUserRole[0]
+                    .toUpperCase()
+                    .concat(eventUserRole.slice(1))}
+                </span>
+              )}
             </p>
           </div>
         </div>

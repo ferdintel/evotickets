@@ -6,7 +6,12 @@ export const getQueryUserEventsAllowed = (
 ) => {
   const queryConstraints = [];
   if (!currentUserIsAdmin) {
-    queryConstraints.push(where("manager.uid", "==", currentUserUid));
+    queryConstraints.push(
+      or(
+        where("manager.uid", "==", currentUserUid),
+        where("memberUids", "array-contains", currentUserUid)
+      )
+    );
   }
   return queryConstraints;
 };

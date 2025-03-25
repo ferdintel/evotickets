@@ -8,7 +8,7 @@ export const uploadEventCoverToCloudStorage = async (imageFile: File) => {
   const fileName = new Date().getTime();
 
   try {
-    const eventCoversRef = ref(firebaseStorage, `event_covers/${fileName}`);
+    const eventCoversRef = ref(firebaseStorage, `eventCovers/${fileName}`);
     const snapshot = await uploadBytes(eventCoversRef, imageFile);
     const downloadUrl = await getDownloadURL(snapshot.ref);
     return downloadUrl;

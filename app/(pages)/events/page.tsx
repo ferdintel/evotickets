@@ -14,6 +14,7 @@ import { EventDataType } from "types/Events";
 import { useAppSelector } from "lib/store/hooks";
 import { selectAuth } from "lib/store/slices/authSlice";
 import { getQueryUserEventsAllowed } from "utils/queries";
+import { QueryConstraint } from "firebase/firestore";
 
 const Events = () => {
   const { currentUser } = useAppSelector(selectAuth);
@@ -25,7 +26,7 @@ const Events = () => {
   );
   const { docs, isLoading, error } = useDocsFromFirestore<EventDataType>(
     "events",
-    queryConstraints
+    queryConstraints as unknown as QueryConstraint[]
   );
 
   // for search and sorting event list

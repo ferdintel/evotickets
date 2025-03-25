@@ -159,7 +159,7 @@ const Invitations = () => {
                     sentInvitations.map((invitation) => (
                       <li
                         key={invitation.id}
-                        className="flex items-center gap-x-3 justify-between"
+                        className="grid grid-cols-5 items-center text-center gap-x-3 justify-between"
                       >
                         <span className="text-sm font-semibold">
                           {invitation.invitee.displayName}
@@ -213,7 +213,7 @@ const Invitations = () => {
                     receivedInvitations.map((invitation) => (
                       <li
                         key={invitation.id}
-                        className="flex items-center gap-x-3 justify-between"
+                        className="grid grid-cols-5 items-center text-center gap-x-3 justify-between"
                       >
                         <span className="text-sm font-semibold">
                           {invitation.invitedBy.displayName}

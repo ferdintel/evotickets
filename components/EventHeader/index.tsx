@@ -7,6 +7,7 @@ import { useParams, usePathname, useRouter } from "next/navigation";
 import { useAppSelector } from "lib/store/hooks";
 import { selectAuth } from "lib/store/slices/authSlice";
 import { selectCurrentEvent } from "lib/store/slices/currentEventSlice";
+import { EventMemberRole } from "@/types/Events";
 
 import { LuArrowLeft } from "react-icons/lu";
 import { PiUsersThree } from "react-icons/pi";
@@ -28,16 +29,18 @@ const EventHeader = () => {
   const currentEvent = useAppSelector(selectCurrentEvent);
   const { currentUser, pending } = useAppSelector(selectAuth);
 
-  const eventUserRole = pending
-    ? "..."
-    : currentUser?.isAdmin
-    ? "administrateur"
-    : currentEvent?.manager?.email === currentUser?.email
-    ? "manager"
-    : currentUser?.uid &&
-      currentEvent?.members[currentUser.uid]?.role === "seller"
-    ? "vendeur"
-    : "contrôleur";
+    // const eventUserRole = pending
+    // ? "..."
+    // : currentUser?.isAdmin
+    // ? "administrateur"
+    // : currentEvent?.manager?.uid === currentUser?.uid
+    // ? "manager"
+    // : currentUser?.uid &&
+    //   currentEvent?.members[currentUser.uid]?.role === EventMemberRole.VENDOR
+    // ? "vendeur"
+    // : "contrôleur";
+
+    const eventUserRole = 'A DEFINIR'
 
   return (
     <>

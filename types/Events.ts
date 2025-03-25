@@ -19,14 +19,6 @@ export type EventCover = {
 };
 
 // event data to store in firestore
-export type EventMember = {
-  [key: string]: {
-    uid: string;
-    email: string;
-    displayName: string;
-    role: EventMemberRole;
-  };
-};
 export type EventManager = {
   uid: string;
   email: string;
@@ -41,10 +33,19 @@ export type StoreEventDataType = {
   imageCoverUrl: string;
   createdBy: string;
   manager: EventManager | null;
-  members: EventMember;
+  memberUids: string[];
   createdAt: Timestamp;
   updatedAt: Timestamp;
 };
+
+// sub-collection members in event collection
+export interface EventMemberDataType {
+  id: string;
+  uid: string;
+  email: string;
+  displayName: string;
+  role: EventMemberRole;
+}
 
 // event data getted from firestore
 export type EventDataType = StoreEventDataType & {
@@ -62,7 +63,6 @@ export type CurrentEventDataSerialized = {
   imageCoverUrl: string;
   createdBy: string;
   manager: EventManager | null;
-  members: EventMember;
   createdAt: string;
   updatedAt: string;
 };

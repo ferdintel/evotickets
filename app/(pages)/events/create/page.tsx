@@ -86,7 +86,7 @@ const CreateEvent = () => {
         imageCoverUrl: eventCoverUrl || "",
         createdBy: currentUser!.uid,
         manager: null,
-        members: {},
+        memberUids: [],
         createdAt: serverTimestamp() as Timestamp,
         updatedAt: serverTimestamp() as Timestamp,
       };

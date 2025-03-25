@@ -11,7 +11,7 @@ const useDocsFromFirestore = <T>(
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<Error | null>(null);
 
-  // to preveont re-renders
+  // to prevent re-renders
   const memoizedConstraints = useMemo(
     () => queryConstraints || [],
     [JSON.stringify(queryConstraints)]

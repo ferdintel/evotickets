@@ -12,7 +12,9 @@ const FetchDataErrorDisplay = ({ msg }: { msg: string }) => {
 
       <p className="text-lg font-semibold"> Une erreur est survenue: {msg}</p>
       <p className="text-foreground/80 font-medium">
-        Assurez-vous d&apos;être connecté à internet puis actualiser la page.
+        {!navigator.onLine
+          ? "Assurez-vous d&apos;être connecté à internet, puis actualiser la page."
+          : "Si l'erreur persiste, veuillez contacter le support."}
       </p>
     </div>
   );

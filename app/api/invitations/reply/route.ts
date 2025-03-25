@@ -1,13 +1,18 @@
 import { NextResponse } from "next/server";
 import { adminFirebaseAuth, adminFirebaseDB } from "lib/firebase/admin";
+
 import { FieldValue } from "firebase-admin/firestore";
+
 import {
   InvitationDataType,
   InvitationStatus,
   invitationStatusInFrench,
 } from "@/types/Events";
-import { handleGetUserByEmailError } from "@/utils/handleGetUserByEmailError";
+
 import { FirebaseError } from "firebase/app";
+import { Timestamp } from "firebase/firestore";
+
+import { handleGetUserByEmailError } from "@/utils/handleGetUserByEmailError";
 
 export async function PATCH(request: Request) {
   const { invitationId, invitationStatus } = await request.json();
@@ -86,20 +91,29 @@ export async function PATCH(request: Request) {
 
     // 6. add user to event members if status = ACCEPTED
     if (invitationStatus === InvitationStatus.ACCEPTED) {
-      const memberRef = adminFirebaseDB
+      const eventDocRef = adminFirebaseDB
         .collection("events")
-        .doc(invitation.eventId)
+        .doc(invitation.eventId);
+      const memberRef = eventDocRef
         .collection("members")
         .doc(invitation.invitee.uid);
 
+      // add member in sub-collection
       await memberRef.set(
         {
+          uid: invitation.invitee.uid,
           email: invitation.invitee.email,
           displayName: invitation.invitee.displayName,
           role: invitation.invitee.role,
+          joinedAt: FieldValue.serverTimestamp() as Timestamp,
         },
         { merge: true }
       );
+
+      // update memberUids array
+      await eventDocRef.update({
+        memberUids: FieldValue.arrayUnion(invitation.invitee.uid),
+      });
     }
 
     // for response
@@ -109,7 +123,7 @@ export async function PATCH(request: Request) {
     return NextResponse.json(
       {
         success: true,
-        message: `Invitation  ${invitationStatusInFrench[
+        message: `Invitation ${invitationStatusInFrench[
           updatedInvitation.status
         ].toLocaleLowerCase()}.`,
       },

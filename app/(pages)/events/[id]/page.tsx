@@ -13,6 +13,7 @@ import { selectCurrentEvent } from "lib/store/slices/currentEventSlice";
 import { currencyFormatter } from "utils/currency";
 import { DEFAULT_EVENT_CATEGORY } from "validators/common";
 import { selectAuth } from "lib/store/slices/authSlice";
+import { EventMemberRole } from "@/types/Events";
 
 import { MdLocationOn } from "react-icons/md";
 import { TbCalendarEvent } from "react-icons/tb";
@@ -199,7 +200,7 @@ const EventGlobalStats = () => {
                 <span className="font-semibold">
                   {
                     Object.values(currentEvent?.members || {}).filter(
-                      (member) => member.role === "seller"
+                      (member) => member.role === EventMemberRole.VENDOR
                     ).length
                   }
                 </span>
@@ -210,7 +211,7 @@ const EventGlobalStats = () => {
                 <span className="font-semibold">
                   {
                     Object.values(currentEvent?.members || {}).filter(
-                      (member) => member.role === "controller"
+                      (member) => member.role === EventMemberRole.CONTROLLER
                     ).length
                   }
                 </span>

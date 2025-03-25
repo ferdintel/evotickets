@@ -69,7 +69,7 @@ const Header = () => {
                 key={link}
                 href={link}
                 className={`${
-                  pathName.includes(link)
+                  pathName.endsWith(link)
                     ? "bg-alternate-light/50 text-white"
                     : "hover:text-white/80"
                 } px-2 py-1 rounded-md duration-300 text-nowrap`}
