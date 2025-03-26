@@ -78,7 +78,7 @@ const EventHeader = () => {
                 currentUser.uid === currentEvent?.manager?.uid;
 
               // do not display restricted links without permission
-              if (link !== "/scan" && !hasAccess) {
+              if (link !== "/" && link !== "/scan" && !hasAccess) {
                 return null;
               }
 

@@ -9,10 +9,7 @@ import ProtectedLayout from "@/components/ProtectedLayout";
 import { useParams } from "next/navigation";
 import { useAppDispatch, useAppSelector } from "@/lib/store/hooks";
 import { selectAuth } from "@/lib/store/slices/authSlice";
-import {
-  selectCurrentEvent,
-  setCurrentEvent,
-} from "@/lib/store/slices/currentEventSlice";
+import { setCurrentEvent } from "@/lib/store/slices/currentEventSlice";
 import { useEffect, useState } from "react";
 import { doc, getDoc } from "firebase/firestore";
 import { eventCollectionRef } from "@/utils/collectionRefs";
@@ -57,9 +54,6 @@ const EventGlobalStats = () => {
           dispatch(setCurrentEvent(eventDataSerialized));
 
           setCurrentEventData({ ...eventData });
-
-      console.log('eventData:', eventData);
-      
         } else {
           setEventError(
             new Error(`L'événement ayant l'id: ${eventId} n'a pas été trouvé`)
