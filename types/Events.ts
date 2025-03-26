@@ -64,6 +64,7 @@ export type StoreEventDataType = {
   memberUids: string[];
   members: EventMember[];
   revenueStats: RevenueStats;
+  ticketCategory:[];
   createdAt: Timestamp;
   updatedAt: Timestamp;
 };
@@ -87,6 +88,7 @@ export type CurrentEventDataSerialized = {
   memberUids: string[];
   members: EventMember[];
   revenueStats: RevenueStats;
+  ticketCategory:[];
   createdAt: string;
   updatedAt: string;
 };

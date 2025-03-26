@@ -1,161 +1,38 @@
 "use client";
 
-import toast from "react-hot-toast";
-import FilledButton from "components/Button";
-import InputField from "components/FormControls/InputField";
+import Button from "components/Button";
 import SelectField from "components/FormControls/SelectField";
-import ToastSuccessMessage from "components/ToastSuccessMessage";
+import ManagerAccessWrapper from "@/components/ManagerAccessWrapper";
+import GenerateNewTicketsDialog from "@/components/GenerateNewTicketsDialog";
 
-import { useForm } from "react-hook-form";
-import { FirebaseError } from "firebase/app";
-import { zodResolver } from "@hookform/resolvers/zod";
 import { selectAuth } from "@/lib/store/slices/authSlice";
 import { useAppSelector } from "@/lib/store/hooks";
-import { GenerateTicketsFormValidation } from "validators/tikets";
-import { DefaultCurrencies, GenerateTicketsFormValues } from "types/Tickets";
 
 import { RiFolderDownloadFill } from "react-icons/ri";
 
 const EventTickets = () => {
   const { currentUser, pending } = useAppSelector(selectAuth);
 
-  const {
-    handleSubmit,
-    register,
-    formState: { errors, isSubmitting },
-  } = useForm<GenerateTicketsFormValues>({
-    resolver: zodResolver(GenerateTicketsFormValidation),
-    defaultValues: {
-      ticketCount: 0,
-      ticketCategory: "Normal",
-      ticketPrice: {
-        value: 0,
-        currency: DefaultCurrencies.USD,
-      },
-    },
-    mode: "onTouched",
-  });
-
-  const generateTickets = async (
-    ticketsToGenerate: GenerateTicketsFormValues
-  ) => {
-    // debug
-    console.log("ticketsToGenerate:", ticketsToGenerate);
-
-    try {
-      // show success message
-      toast.success(
-        (t) => (
-          <ToastSuccessMessage toastId={t.id}>
-            <p>
-              Bravo !{" "}
-              <span
-                className="font-semibold bg-gradient-to-bl from-accent via-alternate
-                to-accent bg-clip-text text-transparent leading-normal"
-              >
-                {"N"} tickets générés{" "}
-              </span>
-              pour l&apos;événement{" "}
-              <span
-                className="font-semibold bg-gradient-to-bl from-accent via-alternate
-                to-accent bg-clip-text text-transparent leading-normal"
-              >
-                {"xzy"}
-              </span>{" "}
-              avec succès !
-            </p>
-          </ToastSuccessMessage>
-        ),
-        { duration: 5000, icon: "👏🏻", style: { paddingRight: "0px" } }
-      );
-    } catch (error) {
-      const errorMessage =
-        error instanceof FirebaseError || error instanceof Error
-          ? error.message
-          : "Une erreur est survenue, veuillez réessayer.";
-
-      toast.error(errorMessage, {
-        duration: 5000,
-      });
-    }
-  };
-
   return (
-    <div className="flex flex-col gap-y-6">
-      {/* tickets generation */}
-
-      <div className="flex flex-col gap-y-2">
-        <h2 className="text-lg font-semibold">
-          Génération des nouveaux billets
-        </h2>
-
-        <form
-          onSubmit={handleSubmit(generateTickets)}
-          className="flex flex-col gap-y-3"
-        >
-          <div className="grid grid-cols-4 gap-x-4 bg-white p-4 mobileM:p-5 rounded-xl border border-gray-300">
-            <InputField
-              inputType="number"
-              fieldName="ticketCount"
-              labelText="Nombre de billets"
-              placeholder="Ex : 120"
-              register={register}
-              errorMessage={errors.ticketCount?.message}
-            />
-
-            <InputField
-              fieldName="ticketCategory"
-              labelText="Catégorie"
-              placeholder="Ex : VIP"
-              register={register}
-              errorMessage={errors.ticketCategory?.message}
-            />
-
-            <InputField
-              inputType="number"
-              fieldName="ticketPrice.value"
-              labelText="Prix"
-              placeholder="Prix d'un ticket"
-              register={register}
-              errorMessage={errors.ticketPrice?.value?.message}
-            />
-
-            <SelectField
-              fieldName="ticketPrice.currency"
-              labelText="Dévise"
-              placeholder="Sélectionnez une devise"
-              register={register}
-              selectOptions={Object.values(DefaultCurrencies).map(
-                (currency) => ({
-                  text: currency,
-                  value: currency,
-                })
-              )}
-              errorMessage={errors.ticketPrice?.currency?.message}
-            />
-          </div>
-
-          <FilledButton
-            type="submit"
-            disabled={isSubmitting}
-            isLoading={isSubmitting}
-            addStyles="self-end"
-          >
-            Générer les billets
-          </FilledButton>
-        </form>
-      </div>
-
-      {/* list of tickets */}
+    <ManagerAccessWrapper>
       <div className="flex flex-col gap-y-0 border border-alternate-light rounded-lg overflow-hidden">
         {/* header */}
-        <div className="bg-alternate-light px-4 py-3 flex items-center justify-between">
-          <h2 className="text-lg font-semibold">Liste des billets générés</h2>
-          <FilledButton size="small" addStyles="flex items-center gap-x-[6px]">
-            <RiFolderDownloadFill size={20} />
-            Télécharger les QRCodes
-          </FilledButton>
-        </div>
+        <header className="bg-alternate-light px-4 py-3 flex items-center justify-between">
+          {/* title */}
+          <h2 className="text-lg font-semibold flex items-center gap-x-4">
+            Liste des billets générés
+            <span className="text-sm">({0})</span>
+          </h2>
+
+          <div className="flex items-center gap-x-4">
+            <GenerateNewTicketsDialog />
+
+            <Button size="small" addStyles="flex items-center gap-x-[6px]">
+              <RiFolderDownloadFill size={20} />
+              Télécharger les QRCodes
+            </Button>
+          </div>
+        </header>
 
         <div className="relative overflow-x-auto">
           <table className="w-full text-sm text-left rtl:text-right bg-white">
@@ -243,7 +120,7 @@ const EventTickets = () => {
           </table>
         </div>
       </div>
-    </div>
+    </ManagerAccessWrapper>
   );
 };
 

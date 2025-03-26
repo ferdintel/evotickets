@@ -2,18 +2,15 @@
 
 import Button from "components/Button";
 import ManagerAccessWrapper from "@/components/ManagerAccessWrapper";
-
-import { useAppSelector } from "@/lib/store/hooks";
-import { selectAuth } from "@/lib/store/slices/authSlice";
-import { selectCurrentEvent } from "@/lib/store/slices/currentEventSlice";
-
-import { TbTicket } from "react-icons/tb";
-import { RiDeleteBinLine } from "react-icons/ri";
-import { EventMemberRole, eventMemberRoleInFrench } from "@/types/Events";
 import TicketsAttributionDialog from "@/components/TicketsAttributionDialog";
 
+import { useAppSelector } from "@/lib/store/hooks";
+import { selectCurrentEvent } from "@/lib/store/slices/currentEventSlice";
+import { EventMemberRole, eventMemberRoleInFrench } from "@/types/Events";
+
+import { RiDeleteBinLine } from "react-icons/ri";
+
 const EventTeam = () => {
-  const auth = useAppSelector(selectAuth);
   const currentEvent = useAppSelector(selectCurrentEvent);
 
   return (

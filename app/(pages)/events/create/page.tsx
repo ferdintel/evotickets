@@ -102,6 +102,7 @@ const CreateEvent = () => {
             usd: 0,
           },
         },
+        ticketCategory: [],
         createdAt: serverTimestamp() as Timestamp,
         updatedAt: serverTimestamp() as Timestamp,
       };

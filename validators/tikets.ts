@@ -1,6 +1,7 @@
 import { z, ZodType } from "zod";
 import {
   DefaultCurrencies,
+  ETicketType,
   GenerateTicketsFormValues,
   TicketsAttributionFormValues,
 } from "types/Tickets";
@@ -8,6 +9,13 @@ import {
 export const GenerateTicketsFormValidation: ZodType<GenerateTicketsFormValues> =
   z.object({
     ticketCount: z.coerce.number().min(1, "Au moins 1 billet"),
+
+    ticketType: z.enum(
+      Object.values(ETicketType) as [ETicketType, ...ETicketType[]],
+      {
+        errorMap: () => ({ message: "Spécifié un type" }),
+      }
+    ),
 
     ticketCategory: z
       .string()
