@@ -62,6 +62,7 @@ const TicketsAttributionDialog = ({
 
   return (
     <Dialog
+      title="Assigner des billets"
       trigger={
         <Button
           size="small"
@@ -99,25 +100,14 @@ const TicketsAttributionDialog = ({
           />
         </div>
 
-        <div className="flex justify-end gap-4">
-          <Button
-            size="small"
-            type="submit"
-            disabled={isSubmitting}
-            isLoading={isSubmitting}
-          >
-            Assigner
-          </Button>
-          
-          <Button
-            size="small"
-            variant="secondary"
-            type="button"
-            onClick={() => reset()}
-          >
-            Annuler
-          </Button>
-        </div>
+        <Button
+          size="small"
+          type="submit"
+          disabled={isSubmitting}
+          isLoading={isSubmitting}
+        >
+          Assigner
+        </Button>
       </form>
     </Dialog>
   );

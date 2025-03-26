@@ -1,6 +1,7 @@
-import { or, where } from "firebase/firestore";
+import { and, or, where } from "firebase/firestore";
 import { useAppSelector } from "@/lib/store/hooks";
 import { selectAuth } from "@/lib/store/slices/authSlice";
+import { selectCurrentEvent } from "@/lib/store/slices/currentEventSlice";
 
 const getCurrentUserInfos = () => {
   const { currentUser } = useAppSelector(selectAuth);
@@ -36,4 +37,21 @@ export const getQueryUserInvitationsAllowed = () => {
   }
 
   return queryConstraints;
+};
+
+export const getQueryUserTicketsAllowed = () => {
+  const { currentUserIsAdmin, currentUserUid } = getCurrentUserInfos();
+  const currentEvent = useAppSelector(selectCurrentEvent);
+
+  const baseFilters = [where("eventId", "==", currentEvent?.id)];
+
+  if (!currentUserIsAdmin) {
+    const userFilters = or(
+      where("managerUid", "==", currentUserUid),
+      where("assignedTo.uid", "==", currentUserUid)
+    );
+    return [and(...baseFilters, userFilters)];
+  }
+
+  return baseFilters;
 };

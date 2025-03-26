@@ -93,10 +93,6 @@ const CreateEvent = () => {
             cdf: 0,
             usd: 0,
           },
-          unrealizedRevenues: {
-            cdf: 0,
-            usd: 0,
-          },
           totalExpected: {
             cdf: 0,
             usd: 0,

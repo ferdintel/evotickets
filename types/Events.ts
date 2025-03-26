@@ -42,10 +42,6 @@ export type RevenueStats = {
     cdf: number;
     usd: number;
   };
-  unrealizedRevenues: {
-    cdf: number;
-    usd: number;
-  };
   totalExpected: {
     cdf: number;
     usd: number;

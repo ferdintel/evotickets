@@ -4,14 +4,12 @@ import Button from "@/components/Button";
 
 import { useParams } from "next/navigation";
 import { useAppSelector } from "@/lib/store/hooks";
-import { selectAuth } from "@/lib/store/slices/authSlice";
 import { selectCurrentEvent } from "@/lib/store/slices/currentEventSlice";
 import { currencyFormatter } from "@/utils/currency";
 import { EventMemberRole } from "@/types/Events";
 
 const InfosAboutTickets = () => {
   const eventId = useParams<{ id: string }>()?.id;
-  const { currentUser } = useAppSelector(selectAuth);
   const currentEvent = useAppSelector(selectCurrentEvent);
 
   const getTotalTicketsSoldCount = () =>
@@ -96,13 +94,15 @@ const InfosAboutTickets = () => {
             <p className="flex items-center gap-x-4 font-semibold text-sm">
               <span>
                 {currencyFormatter(
-                  currentEvent?.revenueStats.unrealizedRevenues.usd || 0,
+                  (currentEvent?.revenueStats.totalExpected.usd || 0) -
+                    (currentEvent?.revenueStats.revenueEarned.usd || 0),
                   "USD"
                 )}
               </span>
               <span>
                 {currencyFormatter(
-                  currentEvent?.revenueStats.unrealizedRevenues.cdf || 0,
+                  (currentEvent?.revenueStats.totalExpected.cdf || 0) -
+                    (currentEvent?.revenueStats.revenueEarned.cdf || 0),
                   "CDF"
                 )}
               </span>
