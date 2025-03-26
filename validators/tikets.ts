@@ -1,5 +1,9 @@
 import { z, ZodType } from "zod";
-import { DefaultCurrencies, GenerateTicketsFormValues } from "types/Tickets";
+import {
+  DefaultCurrencies,
+  GenerateTicketsFormValues,
+  TicketsAttributionFormValues,
+} from "types/Tickets";
 
 export const GenerateTicketsFormValidation: ZodType<GenerateTicketsFormValues> =
   z.object({
@@ -23,4 +27,11 @@ export const GenerateTicketsFormValidation: ZodType<GenerateTicketsFormValues> =
         }
       ),
     }),
+  });
+
+export const TicketsAttributionFormValidation: ZodType<TicketsAttributionFormValues> =
+  z.object({
+    quantity: z.coerce.number().min(1, "Au moins 1 billet"),
+
+    category: z.string().trim().min(1, "Sélectionnez une catégorie"),
   });

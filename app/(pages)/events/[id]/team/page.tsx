@@ -10,6 +10,7 @@ import { selectCurrentEvent } from "@/lib/store/slices/currentEventSlice";
 import { TbTicket } from "react-icons/tb";
 import { RiDeleteBinLine } from "react-icons/ri";
 import { EventMemberRole, eventMemberRoleInFrench } from "@/types/Events";
+import TicketsAttributionDialog from "@/components/TicketsAttributionDialog";
 
 const EventTeam = () => {
   const auth = useAppSelector(selectAuth);
@@ -79,9 +80,10 @@ const EventTeam = () => {
                     >
                       <th
                         scope="row"
-                        className="px-6 py-4 font-semibold whitespace-nowrap"
+                        className="px-6 py-4 whitespace-nowrap flex flex-col"
                       >
-                        {displayName}
+                        <span className="font-semibold">{displayName}</span>
+                        <span className="font-medium">{email}</span>
                       </th>
 
                       <td className="px-6 py-4">
@@ -100,13 +102,8 @@ const EventTeam = () => {
                       </td>
 
                       <td className="px-6 py-4 flex items-center gap-x-3 text-sm">
-                        <Button
-                          size="small"
-                          variant="secondary"
-                          addStyles="flex items-center gap-x-[6px]"
-                        >
-                          <TbTicket size={20} /> Attribuer des billets
-                        </Button>
+                        <TicketsAttributionDialog memberUid={uid} />
+
                         <Button
                           size="small"
                           variant="secondary"

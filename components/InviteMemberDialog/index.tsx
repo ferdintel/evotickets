@@ -33,11 +33,11 @@ const InviteMemberDialog = () => {
     mode: "onBlur",
   });
 
-  // show and hide wrapper of set manager form
-  const [showInviteMemberDialog, setSetShowManagerDialog] = useState(false);
-  const displayInviteMemberDialog = () => setSetShowManagerDialog(true);
-  const hideInviteMemberDialog = () => {
-    setSetShowManagerDialog(false);
+  // show and hide dialog
+  const [showDialog, setShowDialog] = useState(false);
+  const displayDialog = () => setShowDialog(true);
+  const hideDialog = () => {
+    setShowDialog(false);
     reset();
   };
 
@@ -61,7 +61,7 @@ const InviteMemberDialog = () => {
 
       if (response.ok) {
         toast.success(data.message);
-        hideInviteMemberDialog();
+        hideDialog();
       } else {
         toast.error(data.message);
       }
@@ -81,14 +81,14 @@ const InviteMemberDialog = () => {
     <>
       <Button
         size="small"
-        onClick={displayInviteMemberDialog}
+        onClick={displayDialog}
         addStyles="self-center"
       >
         Invitez un membre de votre équipe
       </Button>
 
       {/* profile and logout buttons */}
-      {showInviteMemberDialog && (
+      {showDialog && (
         <form
           onSubmit={handleSubmit(inviteMember)}
           className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 max-w-80 w-full bg-white rounded-xl p-5
@@ -132,7 +132,7 @@ const InviteMemberDialog = () => {
               size="small"
               variant="secondary"
               type="button"
-              onClick={hideInviteMemberDialog}
+              onClick={hideDialog}
             >
               Annuler
             </Button>
@@ -140,10 +140,10 @@ const InviteMemberDialog = () => {
         </form>
       )}
 
-      {/* wrapper to hide form when clicked */}
-      {showInviteMemberDialog && (
+      {/* wrapper to hide dialog form when clicked */}
+      {showDialog && (
         <div
-          onClick={hideInviteMemberDialog}
+          onClick={hideDialog}
           className="bg-dark/50 fixed top-0 left-0 w-screen h-screen z-[5]"
         ></div>
       )}

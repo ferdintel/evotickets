@@ -11,3 +11,8 @@ export type GenerateTicketsFormValues = {
     currency: DefaultCurrencies;
   };
 };
+
+export type TicketsAttributionFormValues = {
+  quantity: number,
+  category: string,
+}
