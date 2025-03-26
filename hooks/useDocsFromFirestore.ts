@@ -1,9 +1,8 @@
 import { useEffect, useState, useMemo } from "react";
-import { firebaseDB } from "lib/firebase/client";
-import { getDocs, collection, query, QueryConstraint } from "firebase/firestore";
+import { getDocs, query, QueryConstraint, Query } from "firebase/firestore";
 
 const useDocsFromFirestore = <T>(
-  collectionName: string,
+  collectionRef: Query,
   queryConstraints?: QueryConstraint[],
   enabled: boolean = true
 ) => {
@@ -29,14 +28,13 @@ const useDocsFromFirestore = <T>(
           throw new Error("ERR_INTERNET_DISCONNECTED");
         }
 
-        const docsRef = collection(firebaseDB, collectionName);
-        const q = query(docsRef, ...memoizedConstraints);
-        
+        const q = query(collectionRef, ...memoizedConstraints);
+
         const snapshot = await getDocs(q);
         const docsList = snapshot.docs.map(
           (doc) => ({ id: doc.id, ...doc.data() } as T)
         );
-        
+
         setDocs(docsList);
         setError(null);
       } catch (error) {
@@ -52,7 +50,7 @@ const useDocsFromFirestore = <T>(
 
     setIsLoading(true);
     fetchData();
-  }, [collectionName, memoizedConstraints, enabled]);
+  }, [collectionRef, memoizedConstraints, enabled]);
 
   return { docs, isLoading, error };
 };

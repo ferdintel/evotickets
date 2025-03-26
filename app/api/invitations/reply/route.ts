@@ -10,8 +10,6 @@ import {
 } from "@/types/Events";
 
 import { FirebaseError } from "firebase/app";
-import { Timestamp } from "firebase/firestore";
-
 import { handleGetUserByEmailError } from "@/utils/handleGetUserByEmailError";
 
 export async function PATCH(request: Request) {
@@ -94,25 +92,20 @@ export async function PATCH(request: Request) {
       const eventDocRef = adminFirebaseDB
         .collection("events")
         .doc(invitation.eventId);
-      const memberRef = eventDocRef
-        .collection("members")
-        .doc(invitation.invitee.uid);
 
-      // add member in sub-collection
-      await memberRef.set(
-        {
+      await eventDocRef.update({
+        // update memberUids array
+        memberUids: FieldValue.arrayUnion(invitation.invitee.uid),
+        // add member in members array in event collection
+        members: FieldValue.arrayUnion({
           uid: invitation.invitee.uid,
           email: invitation.invitee.email,
           displayName: invitation.invitee.displayName,
           role: invitation.invitee.role,
-          joinedAt: FieldValue.serverTimestamp() as Timestamp,
-        },
-        { merge: true }
-      );
-
-      // update memberUids array
-      await eventDocRef.update({
-        memberUids: FieldValue.arrayUnion(invitation.invitee.uid),
+          assignedTicketsCount: 0,
+          scannedTicketsCount: 0,
+        }),
+        updatedAt: FieldValue.serverTimestamp(),
       });
     }
 

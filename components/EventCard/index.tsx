@@ -1,20 +1,10 @@
 import Link from "next/link";
 import Image from "next/image";
 
-import { useDispatch } from "react-redux";
 import { useAppSelector } from "lib/store/hooks";
 import { selectAuth } from "lib/store/slices/authSlice";
 
-import {
-  selectCurrentEvent,
-  setCurrentEvent,
-} from "lib/store/slices/currentEventSlice";
-
-import {
-  CurrentEventDataSerialized,
-  EventDataType,
-  EventMemberRole,
-} from "types/Events";
+import { EventDataType, eventMemberRoleInFrench } from "types/Events";
 
 import { MdLocationOn } from "react-icons/md";
 import { TbCalendarEvent } from "react-icons/tb";
@@ -28,39 +18,12 @@ type EventCardProps = {
 };
 
 const EventCard = ({ eventData }: EventCardProps) => {
-  const dispatch = useDispatch();
-
-  const currentEvent = useAppSelector(selectCurrentEvent);
-  const { currentUser, pending } = useAppSelector(selectAuth);
-
-  const setCurrentEventData = () => {
-    const eventDataSerialized = {
-      ...eventData,
-      beginDate: eventData.beginDate.toDate().toLocaleString(),
-      endDate: eventData.endDate.toDate().toLocaleString(),
-      createdAt: eventData.createdAt.toDate().toLocaleString(),
-      updatedAt: eventData.updatedAt.toDate().toLocaleString(),
-    } as CurrentEventDataSerialized;
-
-    dispatch(setCurrentEvent(eventDataSerialized));
-  };
-
-  // const eventUserRole = pending
-  //   ? "..."
-  //   : currentEvent?.manager?.uid === currentUser?.uid
-  //   ? "manager"
-  //   : currentUser?.uid &&
-  //     currentEvent?.members[currentUser.uid]?.role === EventMemberRole.VENDOR
-  //   ? "vendeur"
-  //   : "contrôleur";
-
-  const eventUserRole = "A DEFINIR";
+  const { currentUser } = useAppSelector(selectAuth);
 
   return (
     <li>
       <Link
         href={`events/${eventData.id}`}
-        onClick={() => setCurrentEventData()}
         className="w-full flex items-center gap-x-4 p-4 rounded-lg bg-white group
         shadow hover:shadow-[5px_5px_var(--alternate-light)] duration-300"
       >
@@ -133,9 +96,13 @@ const EventCard = ({ eventData }: EventCardProps) => {
               ) : (
                 <span className="truncate">
                   Role:{" "}
-                  {eventUserRole[0]
-                    .toUpperCase()
-                    .concat(eventUserRole.slice(1))}
+                  {
+                    eventMemberRoleInFrench[
+                      eventData.members.find(
+                        ({ uid }) => uid === currentUser?.uid
+                      )?.role as "VENDOR" | "CONTROLLER"
+                    ]
+                  }
                 </span>
               )}
             </p>

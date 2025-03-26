@@ -3,6 +3,7 @@ import { FirebaseError } from "firebase/app";
 import { adminFirebaseAuth, adminFirebaseDB } from "lib/firebase/admin";
 import { handleGetUserByEmailError } from "utils/handleGetUserByEmailError";
 import { FieldValue } from "firebase-admin/firestore";
+import { EventManager } from "@/types/Events";
 
 export async function POST(request: Request) {
   const { eventId, managerEmail } = await request.json();
@@ -51,14 +52,20 @@ export async function POST(request: Request) {
     }
 
     // set the manager of event
+    const managerDataToStore: EventManager = {
+      uid: managerInfos.uid,
+      email: managerEmail,
+      displayName: managerInfos.displayName || "",
+      ticketsSoldCount: 0,
+      controlledTicketsCount: 0,
+      totalTicketsGenerated: 0,
+    };
     await adminFirebaseDB
       .collection("events")
       .doc(eventId)
       .update({
         manager: {
-          uid: managerInfos.uid,
-          email: managerEmail,
-          displayName: managerInfos.displayName,
+          ...managerDataToStore,
         },
         updatedAt: FieldValue.serverTimestamp(),
       });

@@ -18,12 +18,40 @@ export type EventCover = {
   imagePreview: string | null;
 };
 
-// event data to store in firestore
+// field manager in event collection
 export type EventManager = {
   uid: string;
   email: string;
   displayName: string;
+  ticketsSoldCount: number;
+  controlledTicketsCount: number;
+  totalTicketsGenerated: number;
 };
+// field members in event collection
+export type EventMember = {
+  uid: string;
+  email: string;
+  displayName: string;
+  role: EventMemberRole;
+  assignedTicketsCount: number;
+  scannedTicketsCount: number;
+};
+// field revenueStats in event collection
+export type RevenueStats = {
+  revenueEarned: {
+    cdf: number;
+    usd: number;
+  };
+  unrealizedRevenues: {
+    cdf: number;
+    usd: number;
+  };
+  totalExpected: {
+    cdf: number;
+    usd: number;
+  };
+};
+// event data to store in firestore
 export type StoreEventDataType = {
   name: string;
   category: EventCategory;
@@ -34,18 +62,11 @@ export type StoreEventDataType = {
   createdBy: string;
   manager: EventManager | null;
   memberUids: string[];
+  members: EventMember[];
+  revenueStats: RevenueStats;
   createdAt: Timestamp;
   updatedAt: Timestamp;
 };
-
-// sub-collection members in event collection
-export interface EventMemberDataType {
-  id: string;
-  uid: string;
-  email: string;
-  displayName: string;
-  role: EventMemberRole;
-}
 
 // event data getted from firestore
 export type EventDataType = StoreEventDataType & {
@@ -63,6 +84,9 @@ export type CurrentEventDataSerialized = {
   imageCoverUrl: string;
   createdBy: string;
   manager: EventManager | null;
+  memberUids: string[];
+  members: EventMember[];
+  revenueStats: RevenueStats;
   createdAt: string;
   updatedAt: string;
 };

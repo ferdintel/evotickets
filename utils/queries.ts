@@ -1,9 +1,16 @@
 import { or, where } from "firebase/firestore";
+import { useAppSelector } from "@/lib/store/hooks";
+import { selectAuth } from "@/lib/store/slices/authSlice";
 
-export const getQueryUserEventsAllowed = (
-  currentUserIsAdmin: boolean,
-  currentUserUid: string
-) => {
+const getCurrentUserInfos = () => {
+  const { currentUser } = useAppSelector(selectAuth);
+  const currentUserIsAdmin = currentUser?.isAdmin;
+  const currentUserUid = currentUser?.uid;
+  return { currentUserIsAdmin, currentUserUid };
+};
+
+export const getQueryUserEventsAllowed = () => {
+  const { currentUserIsAdmin, currentUserUid } = getCurrentUserInfos();
   const queryConstraints = [];
   if (!currentUserIsAdmin) {
     queryConstraints.push(
@@ -16,12 +23,9 @@ export const getQueryUserEventsAllowed = (
   return queryConstraints;
 };
 
-export const getQueryUserInvitationsAllowed = (
-  currentUserIsAdmin: boolean,
-  currentUserUid: string
-) => {
+export const getQueryUserInvitationsAllowed = () => {
+  const { currentUserIsAdmin, currentUserUid } = getCurrentUserInfos();
   const queryConstraints = [];
-
   if (!currentUserIsAdmin) {
     queryConstraints.push(
       or(

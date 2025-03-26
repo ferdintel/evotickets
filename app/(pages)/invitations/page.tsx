@@ -1,5 +1,7 @@
 "use client";
 
+import { useState } from "react";
+
 import toast from "react-hot-toast";
 import Button from "@/components/Button";
 import ProtectedLayout from "@/components/ProtectedLayout";
@@ -7,12 +9,13 @@ import FetchDataErrorDisplay from "@/components/FetchDataErrorDisplay";
 
 import useDocsFromFirestore from "@/hooks/useDocsFromFirestore";
 
+import { FirebaseError } from "firebase/app";
+import { firebaseAuth } from "@/lib/firebase/client";
 import { useAppSelector } from "@/lib/store/hooks";
 import { selectAuth } from "@/lib/store/slices/authSlice";
 import { getQueryUserInvitationsAllowed } from "@/utils/queries";
 import { QueryConstraint } from "firebase/firestore";
-import { firebaseAuth } from "@/lib/firebase/client";
-import { FirebaseError } from "firebase/app";
+import { invitationCollectionRef } from "@/utils/collectionRefs";
 
 import {
   eventMemberRoleInFrench,
@@ -24,23 +27,17 @@ import {
 import { BiLoaderCircle } from "react-icons/bi";
 import { FaUserFriends } from "react-icons/fa";
 import { LuCheck, LuX } from "react-icons/lu";
-import { useState } from "react";
 
 const Invitations = () => {
   const { currentUser } = useAppSelector(selectAuth);
 
   // to get all invitations associated with the current user
-  const queryConstraints = getQueryUserInvitationsAllowed(
-    currentUser?.isAdmin as boolean,
-    currentUser?.uid as string
-  );
-
   const { docs, isLoading, error } = useDocsFromFirestore<InvitationDataType>(
-    "invitations",
-    queryConstraints as unknown as QueryConstraint[]
+    invitationCollectionRef,
+    getQueryUserInvitationsAllowed() as unknown as QueryConstraint[]
   );
 
-  //   to filter invitation
+  // to filter invitation
   const sentInvitations = docs.filter(
     (invitation) => invitation.invitedBy.uid === currentUser?.uid
   );
@@ -252,13 +249,14 @@ const Invitations = () => {
                                 );
                               }}
                             >
-                              {!replyIsLoading && invitationConcerned!==invitation.id && (
-                                <LuCheck
-                                  size={16}
-                                  strokeWidth={3}
-                                  className="text-white"
-                                />
-                              )}
+                              {!replyIsLoading &&
+                                invitationConcerned !== invitation.id && (
+                                  <LuCheck
+                                    size={16}
+                                    strokeWidth={3}
+                                    className="text-white"
+                                  />
+                                )}
                             </Button>
 
                             <Button
@@ -279,13 +277,14 @@ const Invitations = () => {
                                 );
                               }}
                             >
-                              {!replyIsLoading && invitationConcerned!==invitation.id && (
-                                <LuX
-                                  size={16}
-                                  strokeWidth={3}
-                                  className="text-foreground/80"
-                                />
-                              )}
+                              {!replyIsLoading &&
+                                invitationConcerned !== invitation.id && (
+                                  <LuX
+                                    size={16}
+                                    strokeWidth={3}
+                                    className="text-foreground/80"
+                                  />
+                                )}
                             </Button>
                           </div>
                         ) : (

@@ -1,32 +1,26 @@
 "use client";
 
+import { useState } from "react";
+
 import EventCard from "components/EventCard";
 import InputField from "components/FormControls/InputField";
 import useDocsFromFirestore from "hooks/useDocsFromFirestore";
 import FetchDataErrorDisplay from "components/FetchDataErrorDisplay";
 import ProtectedLayout from "@/components/ProtectedLayout";
 
-import { useState } from "react";
+import { EventDataType } from "types/Events";
+import { getQueryUserEventsAllowed } from "utils/queries";
+import { QueryConstraint } from "firebase/firestore";
+import { eventCollectionRef } from "@/utils/collectionRefs";
+
 import { BiLoaderCircle } from "react-icons/bi";
 import { LuCalendarMinus } from "react-icons/lu";
 
-import { EventDataType } from "types/Events";
-import { useAppSelector } from "lib/store/hooks";
-import { selectAuth } from "lib/store/slices/authSlice";
-import { getQueryUserEventsAllowed } from "utils/queries";
-import { QueryConstraint } from "firebase/firestore";
-
 const Events = () => {
-  const { currentUser } = useAppSelector(selectAuth);
-
   // to get all events associated with the current user
-  const queryConstraints = getQueryUserEventsAllowed(
-    currentUser?.isAdmin as boolean,
-    currentUser?.uid as string
-  );
   const { docs, isLoading, error } = useDocsFromFirestore<EventDataType>(
-    "events",
-    queryConstraints as unknown as QueryConstraint[]
+    eventCollectionRef,
+    getQueryUserEventsAllowed() as unknown as QueryConstraint[]
   );
 
   // for search and sorting event list

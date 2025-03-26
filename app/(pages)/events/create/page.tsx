@@ -87,6 +87,21 @@ const CreateEvent = () => {
         createdBy: currentUser!.uid,
         manager: null,
         memberUids: [],
+        members: [],
+        revenueStats: {
+          revenueEarned: {
+            cdf: 0,
+            usd: 0,
+          },
+          unrealizedRevenues: {
+            cdf: 0,
+            usd: 0,
+          },
+          totalExpected: {
+            cdf: 0,
+            usd: 0,
+          },
+        },
         createdAt: serverTimestamp() as Timestamp,
         updatedAt: serverTimestamp() as Timestamp,
       };
@@ -193,11 +208,7 @@ const CreateEvent = () => {
 
           {/* btn to cancel and to create an event */}
           <div className="flex items-center justify-between">
-            <Button
-              type="button"
-              variant="secondary"
-              onClick={() => router.back()}
-            >
+            <Button type="button" variant="secondary" link="/dashboard">
               Annuler
             </Button>
 
@@ -206,7 +217,7 @@ const CreateEvent = () => {
               disabled={isSubmitting}
               isLoading={isSubmitting}
             >
-              Créer l'événment
+              Créer l'événement
             </Button>
           </div>
         </form>

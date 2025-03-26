@@ -1,230 +1,115 @@
 "use client";
 
-import Image from "next/image";
-import Button from "components/Button";
-import SetManagerDialog from "components/SetManagerDialog";
-import InviteMemberDialog from "@/components/InviteMemberDialog";
+import InfosAboutTeam from "@/components/EventGlobalStatsBoxes/InfosAboutTeam";
+import InfosAboutTickets from "@/components/EventGlobalStatsBoxes/InfosAboutTickets";
+import InfosAboutEvent from "@/components/EventGlobalStatsBoxes/InfosAboutEvent";
+import FetchDataErrorDisplay from "@/components/FetchDataErrorDisplay";
 import ProtectedLayout from "@/components/ProtectedLayout";
 
 import { useParams } from "next/navigation";
-import { useAppSelector } from "lib/store/hooks";
-import { selectCurrentEvent } from "lib/store/slices/currentEventSlice";
+import { useAppDispatch, useAppSelector } from "@/lib/store/hooks";
+import { selectAuth } from "@/lib/store/slices/authSlice";
+import {
+  selectCurrentEvent,
+  setCurrentEvent,
+} from "@/lib/store/slices/currentEventSlice";
+import { useEffect, useState } from "react";
+import { doc, getDoc } from "firebase/firestore";
+import { eventCollectionRef } from "@/utils/collectionRefs";
+import { CurrentEventDataSerialized, EventDataType } from "@/types/Events";
 
-import { currencyFormatter } from "utils/currency";
-import { DEFAULT_EVENT_CATEGORY } from "validators/common";
-import { selectAuth } from "lib/store/slices/authSlice";
-import { EventMemberRole } from "@/types/Events";
-
-import { MdLocationOn } from "react-icons/md";
-import { TbCalendarEvent } from "react-icons/tb";
-import { BiSolidCategoryAlt } from "react-icons/bi";
+import { BiLoaderCircle } from "react-icons/bi";
 
 const EventGlobalStats = () => {
   const eventId = useParams<{ id: string }>()?.id;
+
+  // to fetch current event data
+  const dispatch = useAppDispatch();
+  const [currentEventData, setCurrentEventData] = useState<EventDataType>();
+  const [eventIsloading, setEventIsLoading] = useState(true);
+  const [eventError, setEventError] = useState<Error | null>(null);
+  useEffect(() => {
+    const fetchEvent = async () => {
+      if (!eventId) {
+        setEventIsLoading(false);
+        return;
+      }
+
+      try {
+        setEventIsLoading(true);
+        const docRef = doc(eventCollectionRef, eventId);
+        const docSnap = await getDoc(docRef);
+
+        if (docSnap.exists()) {
+          const eventData = {
+            id: docSnap.id,
+            ...docSnap.data(),
+          } as EventDataType;
+
+          // set current event
+          const eventDataSerialized: CurrentEventDataSerialized = {
+            ...eventData,
+            beginDate: eventData.beginDate.toDate().toLocaleString(),
+            endDate: eventData.endDate.toDate().toLocaleString(),
+            createdAt: eventData.createdAt.toDate().toLocaleString(),
+            updatedAt: eventData.updatedAt.toDate().toLocaleString(),
+          };
+          dispatch(setCurrentEvent(eventDataSerialized));
+
+          setCurrentEventData({ ...eventData });
+
+      console.log('eventData:', eventData);
+      
+        } else {
+          setEventError(
+            new Error(`L'événement ayant l'id: ${eventId} n'a pas été trouvé`)
+          );
+        }
+      } catch (err) {
+        if (err instanceof Error) {
+          setEventError(err);
+        }
+      } finally {
+        setEventIsLoading(false);
+      }
+    };
+
+    fetchEvent();
+  }, [eventId]);
+
   const { currentUser } = useAppSelector(selectAuth);
-  const currentEvent = useAppSelector(selectCurrentEvent);
+
+  const isAdminOrEventManage = () =>
+    currentUser?.isAdmin || currentUser?.uid === currentEventData?.manager?.uid;
 
   return (
     <ProtectedLayout>
-      <div className="grid grid-cols-3 gap-5">
-        {/* 1 - infos about event itself */}
-        <div className="flex flex-col gap-y-4 bg-white rounded-lg border border-gray-300 p-4">
-          {/* header */}
-          <div className="-mx-4 pb-4 px-4 flex items-center justify-between border-b border-gray-300">
-            <h3 className="font-semibold">Infos. sur l&apos;événement</h3>
-            <Button link="#" variant="secondary" size="small">
-              Éditer
-            </Button>
-          </div>
+      {/* when an error has occurred */}
+      {eventError && <FetchDataErrorDisplay msg={eventError.message} />}
 
-          {/* body */}
-          <div className="flex flex-col gap-y-3 text-foreground/80 text-sm font-medium">
-            {/* cover */}
-            <Image
-              width={128}
-              height={128}
-              src={
-                currentEvent?.imageCoverUrl ||
-                "/images/events/placeholder-image-300x225.png"
-              }
-              alt={currentEvent?.name || ""}
-              quality={60}
-              unoptimized
-              placeholder="blur"
-              blurDataURL="/images/events/placeholder-image-300x225.png"
-              className="w-full h-28 object-cover rounded-lg"
-            />
+      {/* is loading */}
+      {!eventError && eventIsloading && (
+        <p className="flex items-center justify-center text-center font-medium gap-x-4">
+          Chargement des données sur l'événement
+          <span className="animate-spin text-alternate">
+            <BiLoaderCircle size={20} />
+          </span>
+        </p>
+      )}
 
-            {/* event dates */}
-            <div className="flex items-center gap-x-2">
-              <span className="p-1 rounded-xl bg-gray-200 border border-gray-300">
-                <TbCalendarEvent
-                  size={20}
-                  className="min-w-5 text-foreground/80"
-                />
-              </span>
+      {/* sucess case */}
+      {!eventError && !eventIsloading && (
+        <div className="flex gap-x-5">
+          {/* 1 - infos about event itself */}
+          <InfosAboutEvent />
 
-              <p className="flex items-center gap-x-1">
-                <span>{currentEvent?.beginDate}</span>
-                <span>·</span>
-                <span>{currentEvent?.beginDate}</span>
-              </p>
-            </div>
+          {/* 2 - infos about tickets */}
+          {isAdminOrEventManage() && <InfosAboutTickets />}
 
-            {/* event category */}
-            <p className="flex items-center gap-x-2">
-              <span className="p-1 rounded-xl bg-gray-200 border border-gray-300">
-                <BiSolidCategoryAlt
-                  size={20}
-                  className="min-w-5 text-foreground/80"
-                />
-              </span>
-
-              <span>
-                {
-                  DEFAULT_EVENT_CATEGORY.find(
-                    (event) => event.value === currentEvent?.category
-                  )?.text
-                }
-              </span>
-            </p>
-
-            {/* event location */}
-            <p className="flex items-center gap-x-2">
-              <span className="p-1 rounded-xl bg-gray-200 border border-gray-300">
-                <MdLocationOn
-                  size={20}
-                  className="min-w-5 text-foreground/80"
-                />
-              </span>
-
-              <span>{currentEvent?.location}</span>
-            </p>
-          </div>
+          {/* 3 - infos about team */}
+          <InfosAboutTeam />
         </div>
-
-        {/* 2 - infos about tickets */}
-        <div className="flex flex-col gap-y-4 bg-white rounded-lg border border-gray-300 p-4">
-          {/* header */}
-          <div className="-mx-4 pb-4 px-4 flex items-center justify-between border-b border-gray-300">
-            <h3 className="font-semibold">Billets et ventes</h3>
-
-            <Button
-              link={`/events/${eventId}/tickets`}
-              variant="secondary"
-              size="small"
-            >
-              Détails
-            </Button>
-          </div>
-
-          {/* body */}
-          <div className="flex flex-col gap-y-4">
-            {/* tickets */}
-            <div className="-mx-4 pb-4 px-4 flex flex-col gap-y-2 border-b border-gray-300">
-              <p className="flex items-center justify-between">
-                <span className="text-foreground/80">Billets vendus</span>
-                <span className="font-semibold">100</span>
-              </p>
-
-              <p className="flex items-center justify-between">
-                <span className="text-foreground/80">
-                  Billets utilisés (contrôllés)
-                </span>
-                <span className="font-semibold">85</span>
-              </p>
-
-              <p className="flex items-center justify-between">
-                <span className="text-foreground/80">
-                  Total de billets générés
-                </span>
-                <span className="font-semibold">185</span>
-              </p>
-            </div>
-
-            {/* sales */}
-            <div className="flex flex-col gap-y-2">
-              <p className="flex items-center justify-between">
-                <span className="text-foreground/80">Revenus encaissés</span>
-                <span className="font-semibold">{currencyFormatter(500)}</span>
-              </p>
-
-              <p className="flex items-center justify-between">
-                <span className="text-foreground/80">Revenus latents</span>
-                <span className="font-semibold">{currencyFormatter(425)}</span>
-              </p>
-
-              <p className="flex items-center justify-between">
-                <span className="text-foreground/80">Total attendu</span>
-                <span className="font-semibold">{currencyFormatter(925)}</span>
-              </p>
-            </div>
-          </div>
-        </div>
-
-        {/* 3 - infos about team */}
-        <div className="flex flex-col gap-y-4 bg-white rounded-lg border border-gray-300 p-4">
-          {/* header */}
-          <div className="-mx-4 pb-4 px-4 flex items-center justify-between border-b border-gray-300">
-            <h3 className="font-semibold">Votre équipe</h3>
-
-            <Button
-              link={`/events/${eventId}/team`}
-              variant="secondary"
-              size="small"
-            >
-              Détails
-            </Button>
-          </div>
-
-          {/* body */}
-          <div className="grow flex flex-col gap-y-3">
-            {/* set the event manager or display its email */}
-            <div className="flex items-center justify-between">
-              <p className="text-foreground/80">Manager</p>
-              {currentEvent?.manager?.email ? (
-                <p className="font-semibold">
-                  {currentEvent.manager.uid === currentUser?.uid
-                    ? "Vous"
-                    : currentEvent.manager.displayName + ' · ' + currentEvent.manager.email }
-                </p>
-              ) : (
-                <SetManagerDialog />
-              )}
-            </div>
-
-            {/* count vendors & controllers */}
-            <div className="-mx-4 pb-4 px-4 flex flex-col gap-y-2 border-b border-gray-300">
-              <p className="flex items-center justify-between">
-                <span className="text-foreground/80">Vendeurs</span>
-                <span className="font-semibold">
-                  {
-                    Object.values(currentEvent?.members || {}).filter(
-                      (member) => member.role === EventMemberRole.VENDOR
-                    ).length
-                  }
-                </span>
-              </p>
-
-              <p className="flex items-center justify-between">
-                <span className="text-foreground/80">Contrôleurs</span>
-                <span className="font-semibold">
-                  {
-                    Object.values(currentEvent?.members || {}).filter(
-                      (member) => member.role === EventMemberRole.CONTROLLER
-                    ).length
-                  }
-                </span>
-              </p>
-            </div>
-
-            <div className="grow flex justify-center items-center">
-              {/* button to add a user to your team */}
-              <InviteMemberDialog />
-            </div>
-          </div>
-        </div>
-      </div>
+      )}
     </ProtectedLayout>
   );
 };
